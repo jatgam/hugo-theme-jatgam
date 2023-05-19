@@ -1,0 +1,50 @@
+{{/*
+    Expects a context of:
+        {
+            photoGallery: {
+                photos: [
+                    {
+                        title: string,
+                        description: string,
+                        date_taken: string,
+                        photo_url: string,
+                        thumb_url: string,
+                        thumb_h: string,
+                        thumb_w: string,
+                        url: string,
+                        url_h: string,
+                        url_w: string
+                    },
+                ]
+            }
+        }
+*/}}
+
+{{ with .photoGallery }}
+{{ $galleryID := jsonify .photos | sha256 }}
+<div class="container is-fluid gallery">
+    {{ range $index, $photo := .photos }}
+    <img class="gallery-thumbnail" data-target="{{ $galleryID }}" data-slide="{{ $index }}" src="{{ $photo.thumb_url }}" height="{{ $photo.thumb_h }}" width="{{ $photo.thumb_w }}" alt="{{ $photo.title }}">
+    {{ end }}
+
+    <div class="modal" id="{{ $galleryID }}">
+        <div class="modal-background"></div>
+        <div class="modal-content is-vcentered gallery-modal-content">
+            {{ range .photos }}
+            <div class="gallery-item-slide" data-parent="{{ $galleryID }}">
+                <figure>
+                    <img src="" data-src="{{ .url }}" height="{{ .url_h }}" width="{{ .url_w }}" title="{{ .title }}" class="gallery-lazy-load">
+                    <figcaption{{ if .description }} class="has-description"{{ end }}>
+                        <strong><a href="{{ .photo_url }}" target="_blank" >{{ .title }}</a></strong>
+                        {{ if .description }}<p>{{ .description }}</p>{{ end }}
+                    </figcaption>
+                </figure>
+            </div>
+            {{ end }}
+            <a class="gallery-prev" data-parent="{{ $galleryID }}">&#10094;</a>
+            <a class="gallery-next" data-parent="{{ $galleryID }}">&#10095;</a>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+    </div>
+</div>
+{{ end }}

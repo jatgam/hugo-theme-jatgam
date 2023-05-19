@@ -1,0 +1,30 @@
+<div class="panel {{ with .Get "style"}}{{.}}{{ end }}">
+    <p class="panel-heading">{{with .Get "title"}}{{.}}{{end}}</p>
+    {{- $filesName := "files" }}
+    {{- if ne .Page.File.BaseFileName "index" }}
+      {{- $filesName = printf "%s.files" .Page.File.BaseFileName }}
+    {{- end}}
+    {{- $fileDir := replace .Page.File.Dir "\\" "/" }}
+    {{- $pattern := .Get "pattern" | default "" }}
+    {{ if os.FileExists $fileDir }}
+        {{- range (readDir (printf "content/%s%s" .Page.File.Dir $filesName) ) }}
+        {{- if findRE $pattern .Name}}
+            {{- $size := .Size }}
+            {{- $unit := "Byte" }}
+            {{- if ge $size 1024 }}
+            {{- $size = div $size 1024 }}
+            {{- $unit = "KB" }}
+            {{- end}}
+            {{- if ge $size 1024 }}
+            {{- $size = div $size 1024 }}
+            {{- $unit = "MB" }}
+            {{- end}}
+        <div class="panel-block">
+            <span class="panel-icon is-medium"><i class="ri-file-download-line ri-xl" aria-hidden="true"></i></span>
+            <a href="{{ (printf "%s%s/%s" (lower $fileDir) $filesName .Name) | relLangURL }}">{{.Name}}</a> &nbsp;({{$size}} {{ $unit }})
+        </div>
+        {{- end}}
+        {{- end}}
+    {{ end }}
+    {{- .Inner}}
+</div>

@@ -1,0 +1,14 @@
+.git
+.github
+node_modules
+
+.gitignore
+.npmignore
+.prettierignore
+.prettierrc.json
+.sass-lint.yml
+gulpfile.*
+tsconfig.json
+
+index.html
+screenshot.png

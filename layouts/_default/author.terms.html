@@ -1,0 +1,10 @@
+{{ define "main" }}
+
+authors
+
+{{ range .Data.Pages }}
+	<h2>{{ .Params.name }}</h2>
+	<p>{{ .Params.bio }}</p>
+{{end}}
+
+{{ end }}

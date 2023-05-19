@@ -1,0 +1,9 @@
+{{ define "main" }}
+<h1>{{ .Params.name }}</h1>
+<p>{{ .Params.bio }}</p>
+
+<h2>Articles by {{ .Params.name }}</h2>
+{{ range .Pages }}
+	{{ . }}
+{{ end }}
+{{ end }}

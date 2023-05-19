@@ -1,0 +1,31 @@
+{{ define "main" }}
+{{ partial "breadcrumb.html" . }}
+{{ partial "cover.html" . }}
+
+<section class="section">
+    <div class="container">
+        {{ with .Content }}
+        <div class="content">
+            {{ . }}
+        </div>
+        {{ end }}
+
+        {{ $paginator := .Paginate .RegularPagesRecursive.ByDate.Reverse 5 }}
+
+        {{ range $paginator.Pages }}
+        <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
+        {{ .Date.Format "2006-01-02" }}
+        {{ if .Params.showFullContent }}
+            {{ .Content }}
+        {{ else if .Description }}
+            {{ .Description | markdownify }}
+        {{ else }}
+            {{ .Summary | markdownify }}
+        {{ end }}
+        {{ end }}
+
+        {{ partial "pagination.html" . }}
+    </div>
+</section>
+
+{{ end }}

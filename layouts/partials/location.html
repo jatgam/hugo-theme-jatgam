@@ -1,0 +1,9 @@
+{{ $locationName := .Params.location }}
+{{ $location := default false ($.Site.GetPage ( $locationName | urlize )) }}
+{{ with $.Site.GetPage "locations" }}
+    {{ with (index (.Resources.Match (printf "%s.md" ( $locationName | urlize )) ) 0) }}
+        {{ $location = . }}
+    {{ end }}
+{{ end }}
+
+{{ return (dict "name" $locationName "page" $location) }}

@@ -1,0 +1,21 @@
+{{ $isScrollable := .Get "isScrollable" }}
+{{ $customClasses := .Get "cutomClasses"}}
+
+{{ $class := "table" }}
+
+{{ if $customClasses }}
+    {{ $class = printf "%s %s" $class $customClasses }}
+{{ end }}
+
+{{ $content := .Inner | markdownify }}
+{{ $content = (replace $content `align="left"` `class="has-text-left"`) }}
+{{ $content = (replace $content `align="center"` `class="has-text-centered"`) }}
+{{ $content = (replace $content `align="right"` `class="has-text-right"`) }}
+
+{{ $replacementPattern := `(?si)<table>(.*)</table>` }}
+{{ $replacement := printf `<table class="%s">$1</table>` $class }}
+{{ if $isScrollable }}
+    {{ $replacement = printf `<div class="table-container" style="overflow-y:auto;max-height:100vh;"><table class="%s">$1</table></div>` $class }}
+{{ end }}
+{{ $content = replaceRE $replacementPattern $replacement $content }}
+{{ $content | safeHTML }}

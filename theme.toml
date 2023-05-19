@@ -1,0 +1,12 @@
+name = "jatgam"
+license = "MIT"
+licenselink = "https://github.com/jatgam/hugo-theme-jatgam/blob/main/LICENSE"
+description = "A Bulma Based Theme for Hugo"
+homepage = "https://github.com/jatgam/hugo-theme-jatgam"
+tags = ["responsive"]
+features = ["blog", "shortcode", "syntax highlighting"]
+min_version = 0.111
+
+[author]
+  name = "Jatgam"
+  homepage = "https://jatgam.com"

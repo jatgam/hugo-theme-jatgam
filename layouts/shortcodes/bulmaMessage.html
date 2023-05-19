@@ -1,0 +1,4 @@
+{{ $style := default (.Get "style") "is-warning" }}
+<article class="message {{ $style }}">
+    <div class="message-body content">{{ .Inner }}</div>
+</article>

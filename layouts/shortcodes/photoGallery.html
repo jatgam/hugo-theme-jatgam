@@ -1,0 +1,4 @@
+{{ $datafile := .Get "datafile" }}
+{{ $galleryPhotos := index .Site.Data $datafile }}
+
+{{ partial "photoGallery" (dict "photoGallery" $galleryPhotos) }}

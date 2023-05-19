@@ -1,0 +1,112 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="{{ .Site.BaseURL }}">
+      {{- if default false .Site.Params.disabled_logo -}}
+        <h4 class="is-size-4">{{ .Site.Params.logo_text }}</h4>
+      {{- else -}}
+        {{- with resources.Get (default "logo.png" .Site.Params.logo) -}}
+          <img src="{{ .RelPermalink }}" alt="{{ $.Site.Title }}" class="is-hidden-touch" />
+          <img src="{{ .RelPermalink }}" alt="{{ $.Site.Title }}" class="is-hidden-desktop" />
+        {{- end -}}
+      {{- end -}}
+      <span class="is-sr-only">{{ .Title }} - {{ i18n "navHome" }}</span>
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="topNavBar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></a>
+  </div>
+  <div id="topNavBar" class="navbar-menu">
+    <div class="navbar-start">
+      {{- range .Site.Menus.main.ByWeight -}}
+      {{ if .HasChildren }}
+        {{ $hasSections := (hasPrefix (index .Children 0).Identifier "section.") }}
+        {{ if $hasSections }}
+        <div class="navbar-item has-dropdown is-hoverable is-mega">
+          <div class="navbar-link flex">{{ .Name }}</div>
+          <div class="navbar-dropdown " data-style="width: 18rem;">
+            <div class="container is-fluid">
+              <div class="columns">
+                {{ if ne .URL "" }}{{ end }}
+                <div class="column">
+                  {{- range .Children.ByWeight -}}
+                    {{ $column := printf "%s" .Post }}
+                    {{ if eq $column "1" }}
+                    <h1 class="title is-6 is-mega-menu-title">{{ .Name }}</h1>
+                    {{ if .HasChildren }}
+                    {{- range .Children.ByWeight -}}
+                    <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+                    {{- end -}}
+                    {{ end }}
+                    {{ end }}
+                  {{- end -}}
+                </div>
+                <div class="column">
+                  {{- range .Children.ByWeight -}}
+                    {{ $column := printf "%s" .Post }}
+                    {{ if eq $column "2" }}
+                    <h1 class="title is-6 is-mega-menu-title">{{ .Name }}</h1>
+                    {{ if .HasChildren }}
+                    {{- range .Children.ByWeight -}}
+                    <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+                    {{- end -}}
+                    {{ end }}
+                    {{ end }}
+                  {{- end -}}
+                </div>
+                <div class="column">
+                  {{- range .Children.ByWeight -}}
+                    {{ $column := printf "%s" .Post }}
+                    {{ if eq $column "3" }}
+                    <h1 class="title is-6 is-mega-menu-title">{{ .Name }}</h1>
+                    {{ if .HasChildren }}
+                    {{- range .Children.ByWeight -}}
+                    <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+                    {{- end -}}
+                    {{ end }}
+                    {{ end }}
+                  {{- end -}}
+                </div>
+                <div class="column">
+                  {{- range .Children.ByWeight -}}
+                    {{ $column := printf "%s" .Post }}
+                    {{ if eq $column "4" }}
+                    <h1 class="title is-6 is-mega-menu-title">{{ .Name }}</h1>
+                    {{ if .HasChildren }}
+                    {{- range .Children.ByWeight -}}
+                    <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+                    {{- end -}}
+                    {{ end }}
+                    {{ end }}
+                  {{- end -}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{- else -}}
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">{{ .Name }}</a>
+
+            <div class="navbar-dropdown">
+            {{- range .Children.ByWeight -}}
+              <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+            {{- end -}}
+            </div>
+          </div>
+        {{ end }}
+      {{- else -}}
+      <a class="navbar-item" href="{{ .URL }}">{{ .Name }}</a>
+      {{- end -}}
+      {{- end -}}
+    </div>
+    <div class="navbar-end">
+      <div class="is-flex is-justify-content-center" id="navbar-socials">
+        {{- range .Site.Menus.socialbar.ByWeight -}}
+        <a href="{{ .URL }}" class="navbar-item">
+          <span class="icon is-medium">
+            {{- .Pre | safeHTML -}}
+          </span>
+        </a>
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+</nav>

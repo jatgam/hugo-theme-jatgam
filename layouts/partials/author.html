@@ -1,0 +1,13 @@
+{{ $authors := .Params.authors }}
+{{- range $authors -}}
+    {{ $name := . }}
+    {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
+    {{- with $.Site.GetPage $path -}}
+    <span class="icon-text">
+        <span class="icon">
+            <i class='ri-user-fill' style='color: #000000;'></i>
+        </span>
+        <span><a href="{{ .RelPermalink }}">{{ $name }}</a></span>
+    </span>
+    {{- end -}}
+{{- end -}}

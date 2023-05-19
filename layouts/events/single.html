@@ -1,0 +1,115 @@
+{{ define "main" }}
+{{- partial "breadcrumb.html" . }}
+{{- partial "cover.html" . }}
+{{- $location := partial "location.html" . }}
+{{ $locationModalId := $location.name | sha256 }}
+{{ $.Scratch.Set "location" $location }}
+{{ $addToCalendarId := delimit (shuffle (split (sha256 .Date) "" )) "" }}
+{{ $.Scratch.Set "addToCalendarId" $addToCalendarId }}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                {{ with .Content }}
+                <div class="content">
+                    {{ . }}
+                </div>
+                {{ end }}
+            </div>
+            <div class="column is-half-tablet is-one-third-widescreen">
+                <div class="card event-card">
+                    <div class="card-content is-flex is-flex-direction-row">
+                        <div class="event-date-icon">
+                            <span class="event-date-icon-month"><abbr title="{{ dateFormat "January" (default .Date .Params.startDateTime) }}">{{ dateFormat "Jan" (default .Date .Params.startDateTime) }}</abbr></span>
+                            <span class="event-date-icon-day">{{ dateFormat "02" (default .Date .Params.startDateTime) }}</span>
+                            <span class="event-date-icon-year">{{ dateFormat "2006" (default .Date .Params.startDateTime) }}</span>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-time">
+                                <div class="is-align-items-center is-flex">
+                                    <span class="icon is-medium"><i class='ri-time-line ri-2x'></i></span>
+                                    <div>
+                                        {{ dateFormat "3:04PM" (default .Date .Params.startDateTime) }} to {{ dateFormat "3:04PM" .Params.endDateTime }} {{ dateFormat "MST" .Params.endDateTime }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="event-location">
+                                <div class="is-align-items-center is-flex">
+                                    <span class="icon is-medium"><i class='ri-map-pin-2-line ri-2x'></i></span>
+                                    <div>
+                                        <p class="title is-5">{{ $location.name }}</p>
+                                        {{ with $location.page }}<p class="subtitle is-6">{{ .Params.address }}</p>{{ end }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a class="card-footer-item" id="{{ $addToCalendarId }}"><span class="icon-text"><span class="icon"><i class='ri-calendar-event-fill ri-xl'></i></span><span>Add To Calendar</span></span></a>
+                        {{- with $location.page }}<a class="card-footer-item model-open-button" data-target="{{ $locationModalId }}"><span class="icon-text"><span class="icon"><i class='ri-road-map-line ri-xl'></i></span><span>Directions</span></span></a>{{ end }}
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ with $location.page }}
+<div class="modal" id="{{ $locationModalId }}">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">{{ .Params.name }}</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="content">
+                {{ .Content }}
+            </div>
+            
+            <div class="is-align-items-center is-justify-content-center is-flex m-5">
+                <span class="icon is-medium"><i class='ri-map-pin-2-line ri-2x'></i></span>
+                <div>
+                    {{ partial "gmapsLink.html" (dict "address" .Params.address "placeId" .Params.gmapsPlaceId) }}
+                </div>
+            </div>
+
+            {{ partial "map.html" . }}
+        </section>
+        <footer class="modal-card-foot is-justify-content-right">
+            <button class="button is-primary">Close</button>
+        </footer>
+    </div>
+</div>
+{{ end }}
+
+{{ end }}
+
+{{ define "extrascripts" }}
+{{- $location := $.Scratch.Get "location" }}
+{{ $addToCalendarId := $.Scratch.Get "addToCalendarId" }}
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2.2.5/dist/atcb.js" integrity="sha256-6yWNI6TMEEhoxmwUvHkwXNts2Xnh/aOR1tOCOdqhH7M=" crossorigin="anonymous" async defer></script>
+<script>
+    const addToCalendarConfig = {
+        name: {{ .Title }},
+        description: {{ .Summary }},
+        location: "{{with $location.page }}{{ .Params.name }}, {{ .Params.address }}{{else}}{{ $location.name }}{{end}}",
+        startDate: "{{ dateFormat "2006-01-02" (default .Date .Params.startDateTime) }}",
+        {{- if (not .Params.allday) }}
+        startTime: "{{ dateFormat "15:04" (default .Date .Params.startDateTime) }}",
+        {{- with .Params.endDateTime }}
+        endDate: "{{ dateFormat "2006-01-02" . }}",
+        endTime: "{{ dateFormat "15:04" . }}",
+        {{ end -}}
+        {{ end -}}
+        timeZone: "America/New_York",
+        iCalFileName: {{ .Title | urlize }},
+        hideBranding: true,
+        options: ["Apple", "Google", "iCal", "Outlook.com", "Microsoft365", "MicrosoftTeams", "Yahoo"],
+    };
+    const button = document.getElementById({{ $addToCalendarId }});
+    if (button) {
+        button.addEventListener('click', () => atcb_action(addToCalendarConfig, button));
+    }
+</script>
+{{ end }}

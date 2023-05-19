@@ -1,0 +1,122 @@
+<footer class="footer">
+
+    {{- if isset .Site.Params.Widgets "navinfooter" }}
+    {{- if default false .Site.Params.Widgets.NavInFooter.enable }}
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-9">
+                    <div class="tile is-ancestor">
+                        <div class="tile is-12 is-parent is-flex-wrap-wrap">
+
+                            {{ $noMenu := slice }}
+                            {{ range .Site.Menus.main.ByWeight }}
+
+                                {{ if .HasChildren }}
+                                {{ $hasSections := (hasPrefix (index .Children 0).Identifier "section.") }}
+                                {{ if $hasSections }}
+                                    {{ range .Children.ByWeight }}
+                                    {{ if .HasChildren }}
+                                    <div class="tile is-4 is-child">
+                                        <nav class="jatgam__footer-nav">
+                                            <dl>
+                                                <dt><h1 class="title is-6 is-uppercase">{{ .Name }}</h1></dt>
+                                            
+                                                {{ range .Children.ByWeight }}
+                                                <dd><a  href="{{ .URL }}">{{ .Name }}</a></dd>
+                                                {{- end }}
+                                            </dl>
+                                        </nav>
+                                    </div>
+                                    {{ end }}
+                                    {{ end }}
+
+                                
+                                {{ else }}
+                                    <div class="tile is-4 is-child">
+                                        <nav class="jatgam__footer-nav">
+                                            <dl>
+                                                <dt><h1 class="title is-6 is-uppercase">{{ .Name }}</h1></dt>
+                                            
+                                                {{ range .Children.ByWeight }}
+                                                <dd><a  href="{{ .URL }}">{{ .Name }}</a></dd>
+                                                {{- end }}
+                                            </dl>
+                                        </nav>
+                                    </div>
+                                {{ end }}
+                                {{ else }}
+                                    {{ $noMenu = append . $noMenu }}
+                                {{ end }}
+                            {{ end }}
+
+                            {{ if (not (default false .Site.Params.Widgets.NavInFooter.showNonDropDownOnRight)) }}
+                            <div class="tile is-4 is-child">
+                                <nav class="jatgam__footer-nav">
+                                    <dl>
+                                        <dt><h1 class="title is-6 is-uppercase">{{ .Site.Params.Widgets.NavInFooter.nonDropDownTitle }}</h1></dt>
+                                        {{ range $noMenu }}
+                                        <dd><a href="{{ .URL }}">{{ .Name }}</a></dd>
+                                        {{ end }}
+                                    </dl>
+                                </nav>
+                            </div>
+                            {{ end }}
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    {{ if (default false .Site.Params.Widgets.NavInFooter.showNonDropDownOnRight) }}
+                        <nav class="jatgam__footer-nav">
+                            <dl>
+                                <dt><h1 class="title is-6 is-uppercase">{{ .Site.Params.Widgets.NavInFooter.nonDropDownTitle }}</h1></dt>
+                                {{ range $noMenu }}
+                                <dd><a href="{{ .URL }}">{{ .Name }}</a></dd>
+                                {{ end }}
+                            </dl>
+                        </nav>
+                    {{ end }}
+                    <nav class="jatgam__footer-nav">
+                        <dl>
+                            <dt><h1 class="title is-6 is-uppercase mb-2">Follow Us</h1></dt>
+                        {{ range .Site.Menus.socialbar.ByWeight }}
+                            <dd>
+                            <span class="icon-text">
+                                <span class="icon">
+                                {{ .Pre | safeHTML }}
+                                </span>
+                                <span>&nbsp;<a href="{{ .URL }}">{{ .Name }}</a></span>
+                            </span>
+                            </dd>
+                        {{ end }}
+                        </dl>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{ end -}}
+    {{ end -}}
+
+    <section class="section">
+        <div class="container">
+            <div class="has-text-centered">
+                <p class="block">
+                    {{ if $.Site.Copyright }}
+                    {{ $.Site.Copyright | safeHTML }}
+                    {{ else }}
+                    Copyright &copy; {{ now.Year }}. All Rights Reserved.
+                    {{ end }}
+                </p>
+                <p class="block">
+                    Powered by <a href="http://gohugo.io"><strong>Hugo</strong></a> and <a href="https://bulma.io/"><strong>Bulma</strong></a> <span>:: Theme made by <a href="https://github.com/jatgam/hugo-theme-jatgam"><strong>Jatgam</strong></a></span>
+                </p>
+            </div>
+        </div>
+    </section>
+</footer>
+
+<!-- Extended footer section-->
+{{ partial "extended_footer.html" . }}

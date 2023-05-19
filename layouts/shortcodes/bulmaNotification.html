@@ -1,0 +1,4 @@
+{{ $style := default (.Get "style") "is-primary is-light" }}
+<div class="notification {{ $style }}">
+    {{ .Inner }}
+</div>

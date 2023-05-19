@@ -1,0 +1,43 @@
+{{ if isset .Site.Params.Widgets "recentposts" }}
+{{ if default false .Site.Params.Widgets.RecentPosts.enable }}
+<section class="section" id="recentPosts">
+    <div class="container">
+        <div class="has-text-centered block"><h1 class="title is-size-3-mobile is-size-2 is-uppercase is-section-title">{{ .Site.Params.Widgets.RecentPosts.title | chomp }}</h1></div>
+        <p class="block blurb has-text-centered">{{ .Site.Params.Widgets.RecentPosts.blurb }}</p>
+        {{ $posts := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+        <div class="columns is-multiline is-centered">
+        {{- range first 4 $posts.Pages -}}
+            <div class="column is-3-widescreen is-4-desktop is-6-tablet">
+                <div class="card recent-posts recent-posts-vertical">
+                    <header class="card-header">
+                        <p class="card-header-title is-centered"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+                    </header>
+                    {{- if index .Params "cover" -}}
+                        {{ $image := .Params.Cover }}
+                        {{- with .Resources.GetMatch $image -}}
+                            {{ $newHeight := 300 }}
+                            {{ $newWidth := div (mul $newHeight .Width) .Height }}
+                            {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
+                            {{ $buffer = $buffer.Crop "400x300 center jpeg q100" }}
+                            {{ $image = $buffer.RelPermalink }}
+                        {{- end -}}
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="{{ $image }}">
+                                <figcaption><a href="{{ .RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></figcaption>
+                            </figure>
+                        </div>
+                    {{- end -}}
+                    <div class="card-content">
+                        <div class="has-text-centered is-size-7 mb-3">{{- partial "byLine.html" . -}}</div>
+                        <p>{{- partial "summary.html" .Content -}}</p>
+                        <div class="has-text-centered mt-5"><a href="{{ .RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></div>
+                    </div>
+                </div>
+            </div>
+        {{- end -}}
+        </div>
+    </div>
+</section>
+{{ end }}
+{{ end }}

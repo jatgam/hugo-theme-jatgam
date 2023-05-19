@@ -1,0 +1,22 @@
+{{ if site.Params.enableMaps }}
+    {{ if ($.Param "latitude") }}
+      {{ if ($.Param "longitude") }}
+        <div class="map-container">
+          <div class="map-markers">
+
+          </div>
+          <div id="map" data-latitude="{{ $.Param "latitude" }}" data-longitude="{{ $.Param "longitude" }}" {{ with .Params.Name }}data-name="{{ . | plainify | chomp }}"{{ end }} {{ with .Params.Address }}data-address="{{- . | plainify | chomp -}}"{{ end -}} {{ with .Params.GmapsPlaceId }}data-placeid="{{ . | plainify | chomp }}"{{ end -}}></div>
+        </div>
+        {{ with .Params.MapPolygon }}
+          <script>
+            var mapPolygon = [
+            {{ range $index, $e := . }}
+            {{ if $index }}, {{ end }}
+            { latitude: {{.latitude}}, longitude: {{.longitude}} }
+            {{ end }}
+            ];
+          </script>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+{{ end }}

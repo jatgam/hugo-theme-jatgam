@@ -1,0 +1,20 @@
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+{{- if .Site.Params.enableMaps -}}
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+{{- $mapJs := resources.Get "js/maps.init.js" | js.Build (dict "minify" hugo.IsProduction) | fingerprint -}}
+<script src="{{ $mapJs.RelPermalink }}"  integrity="{{ $mapJs.Data.Integrity }}"></script>
+{{- end -}}
+
+<!-- general scripts -->
+{{- $generalJs := resources.Get "js/general.js" | js.Build (dict "minify" hugo.IsProduction) | fingerprint -}}
+<script src="{{ $generalJs.RelPermalink }}" integrity="{{ $generalJs.Data.Integrity }}"></script>
+
+<!-- bulma modals -->
+{{- $bulmaModalsJs := resources.Get "js/bulmaModals.js" | js.Build (dict "minify" hugo.IsProduction) | fingerprint -}}
+<script src="{{ $bulmaModalsJs.RelPermalink }}" integrity="{{ $bulmaModalsJs.Data.Integrity }}"></script>
+
+<!-- splide -->
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js" integrity="sha256-qtSu/7zFd1zx2GaGN7yAuWyIXuxC7IVrfSpncRDxUII=" crossorigin="anonymous"></script>
+{{- $splideJs := resources.Get "js/splide.init.js" | js.Build (dict "minify" hugo.IsProduction) | fingerprint -}}
+<script src="{{ $splideJs.RelPermalink }}" integrity="{{ $splideJs.Data.Integrity }}"></script>

@@ -1,0 +1,96 @@
+{{ if default false .Site.Params.EventsCarouselHomepage.enable }}
+
+{{ $events := where .Site.RegularPages "Type" "events" }}
+
+{{ if gt (len $events) 0 }}
+{{ range where $events "Params.startDateTime" "==" nil }}
+    {{ errorf (printf `carousel: missing startDateTime at %s` .Title) }}
+{{ end }}
+{{ $hiddenEvents := where (where $events "Params.hideFromCarousel" "!=" nil) "Params.hideFromCarousel" true }}
+{{ $events = $events | complement $hiddenEvents }}
+<section class="hero is-primary is-medium has-background">
+    <img class="hero-background is-transparent" src="{{ .Site.Params.EventsCarouselHomepage.bg_img }}">
+    <div class="hero-body" id="splide-carousel">
+        <div class="splide" aria-label="{{ .Site.Params.EventsCarouselHomepage.label }}" data-splide='{"type":"loop","perPage":1,"autoplay":{{ .Site.Params.EventsCarouselHomepage.auto_play }},"interval":{{ .Site.Params.EventsCarouselHomepage.slide_speed }}}'>
+            <div class="splide__track">
+                <ul class="splide__list">
+                    {{ $events = $events.ByParam "StartDateTime" }}
+                    {{ if gt (len $events) 5 }}
+                        {{ $upcomingEvents := slice }}
+                        {{ range $events }}
+                            {{ if (time (default .Date .Params.startDateTime)).After now }}
+                                {{ $upcomingEvents = $upcomingEvents | append . }}
+                            {{ end }}
+                        {{ end }}
+                        {{ if lt (len $upcomingEvents) 5 }}
+                            {{ $priorEvents := slice }}
+                            {{ $priorPad := sub 5 (len $upcomingEvents) }}
+                            {{ range $events }}
+                                {{ if (time (default .Date .Params.startDateTime)).Before now }}
+                                    {{ $priorEvents = $priorEvents | append . }}
+                                {{ end }}
+                            {{ end }}
+                            {{ range first $priorPad $priorEvents.Reverse }}
+                                {{ $upcomingEvents = (slice .) | append $upcomingEvents}}
+                            {{ end }}
+                        {{ end }}
+                        {{ $events = $upcomingEvents }}
+                    {{ end }}
+                    {{ range first 5 $events }}
+                        {{ $cover := false }}
+                        {{- if index .Params "cover" -}}
+                            {{- if .Resources.GetMatch .Params.Cover }}
+                                {{ with .Resources.GetMatch .Params.Cover }}
+                                    {{ $currentRatio := div (float .Width) (float .Height) }}
+                                    {{ $wantedRatio := div (float 5) (float 3) }}
+                                    {{ $newWidth := .Width }}
+                                    {{ $newHeight := .Height }}
+                                    {{ if (gt $currentRatio $wantedRatio) }}
+                                        {{ $newWidth = int (mul $wantedRatio .Height) }}
+                                    {{ else }}
+                                        {{ $newHeight = int (div .Width $wantedRatio) }}
+                                    {{ end }}
+                                    {{ $buffer := .Crop (printf "%dx%d center jpeg q100" $newWidth $newHeight) }}
+
+                                    {{ if gt $buffer.Width 1440 }}
+                                        {{ $cover = ($buffer.Resize "1440x jpeg q100").RelPermalink }}
+                                    {{ else }}
+                                        {{- $cover = .RelPermalink -}}
+                                    {{ end }}
+                                {{ end }}
+                            {{- else -}}
+                                {{- $cover = absURL .Params.Cover -}}
+                            {{- end -}}
+                        {{- end -}}
+                            <li class="splide__slide">
+                                <div class="container">
+                                    <div class="columns is-vcentered is-centered">
+                                        <div class="column is-half has-text-centered is-flex is-flex-direction-column is-justify-content-center carousel-description-column">
+                                            <div>
+                                                <h1 class="title is-size-2-tablet is-size-3-mobile has-text-weight-bold">{{ .Title }}</h1>
+                                                <h2 class="subtitle is-size-4-tablet is-size-5-mobile has-text-weight-bold">{{ (time (default .Date .Params.startDateTime)).Format "Monday, January 2, 2006 @ 3:04PM MST" }}</h2>
+                                            </div>
+                                            <div class="is-size-5-tablet is-size-6-mobile content carousel-description">{{ .Description | safeHTML }}</div>
+                                            <div class="has-text-centered"><a href="{{ .RelPermalink }}" class="button is-primary is-light is-responsive">Read More</a></div>
+                                            <div class="column is-half is-flex is-flex-direction-column is-justify-content-center is-hidden-tablet">
+                                                <figure class="image is-5by3">
+                                                    <img class="" src="{{ $cover }}" draggable="false" />
+                                                </figure>
+                                            </div>
+                                        </div>
+                                        <div class="column is-half is-flex is-flex-direction-column is-justify-content-center is-hidden-mobile">
+                                            <figure class="image is-5by3">
+                                                <img class="" src="{{ $cover }}" draggable="false" />
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{{ end }}
+{{ end }}

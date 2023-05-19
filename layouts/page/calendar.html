@@ -1,0 +1,68 @@
+{{ define "extrahead" }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
+<style>
+    @media (max-width: 767.98px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+        display: block;
+        text-align: center;
+    }
+
+    .fc-header-toolbar .fc-toolbar-chunk {
+        display: block;
+    }
+}
+</style>
+{{ end }}
+
+{{ define "main" }}
+{{ partial "breadcrumb.html" . }}
+{{ partial "cover.html" . }}
+<section class="section">
+    {{ with .Content }}
+    <div class="container">
+        {{ . }}
+    </div>
+    {{ end }}
+    <div class="container"><div id='calendar'></div></div>
+</section>
+{{ end }}
+
+{{ define "extrascripts" }}
+<script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js" integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js" integrity="sha256-7PzqE1MyWa/IV5vZumk1CVO6OQbaJE4ns7vmxuUP/7g=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js" integrity="sha256-Y7WDI9UHToDgc46Sw1kOFkQSnKhwLjp3NnpfcJ0NMRE=" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2.2.5/dist/atcb.js" integrity="sha256-6yWNI6TMEEhoxmwUvHkwXNts2Xnh/aOR1tOCOdqhH7M=" crossorigin="anonymous" async defer></script>
+
+<script>
+    const subscribeConfig = {
+        name: {{ (default "Jatgam Theme Calendar" .Site.Params.Events.calendarName) }},
+        subscribe: true,
+        startDate: "2023-04-08",
+        icsFile: {{ .Site.BaseURL }}+"events/index.ics",
+        options: ["Apple", "Google", "iCal", "Outlook.com", "Microsoft365", "MicrosoftTeams", "Yahoo"],
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            events: '{{ .Site.BaseURL }}events/index.json',
+            initialView: "listYear",
+            customButtons: {
+                subscribeToCalendar: {
+                    text: 'Subscribe',
+                    click: function(e) {
+                        atcb_action(subscribeConfig, e.target);
+                    }
+                }
+            },
+            headerToolbar: {
+                left: "prev,next today subscribeToCalendar",
+                center: "title",
+                right: "listYear dayGridMonth,timeGridWeek,timeGridDay",
+            },
+        });
+        calendar.render();
+    });
+</script>
+{{ end }}

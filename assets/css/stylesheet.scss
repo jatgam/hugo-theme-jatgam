@@ -1,0 +1,404 @@
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inconsolata:wght@200;300;400;500;600;700;800;900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+// Variable overrides come before you import Bulma
+$primary: {{ .Site.Params.primaryColor | default "#00d1b2" }};
+$secondary: {{ .Site.Params.secondaryColor | default "#f14668" }};
+
+$family-primary: 'Roboto', sans-serif;
+$family-secondary: 'Montserrat', sans-serif;
+$family-monospace: 'Inconsolata', monospace;
+$family-title: 'Bebas Neue', sans-serif;
+
+$navbar-item-img-max-height: 5rem;
+
+.navbar-item.is-mega {
+    position: static;
+  
+    .is-mega-menu-title {
+      margin-bottom: 0;
+      padding: .375rem 1rem;
+    }
+}
+
+// import Bulma
+@import "./bulma-0.9.4/bulma.sass";
+
+// import Bulma Sticky Tables
+@import "./bulma-sticky-table-2.0.1/_sticky-table.scss";
+
+.is-family-title {
+    font-family: $family-title;
+}
+
+// styles that use the Bulma mixins come after you import Bulma
+#navMenu{
+    @include mobile{
+        display: none;
+        background-color: $white-bis;
+
+        a{
+            padding: 1em !important;
+        }
+
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .navbar-dropdown .is-active {
+      display: block;
+    }
+    .navbar-dropdown:not(.is-active) {
+      display: none;
+    }
+}
+
+.is-section-title {
+    display: inline-block;
+    border-bottom: solid 5px $primary;
+    line-height: 1.1;
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+    vertical-align: middle;
+    letter-spacing: 0.06em;
+}
+
+.blurb {
+    font-size: 1.3em;
+    font-weight: 400;
+}
+
+.hero.has-background {
+    position: relative;
+    overflow: hidden;
+}
+.hero-background {
+    position: absolute;
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+}
+.hero-background.is-repeating {
+    object-fit: unset;
+    object-position: unset;
+    width: unset;
+    height: unset;
+}
+.hero-background.is-transparent {
+    opacity: 0.1;
+}
+
+div.hero + section.section {
+    padding-top: 1em;
+}
+
+// splide
+.hero-body#splide-carousel {
+    padding: .5rem .5rem;
+    .splide__slide .container {
+        margin: 1rem auto;
+        padding: 1rem;
+        height: calc(100%);
+        max-height: 50vh;
+        height: 50vh;
+        
+        .columns {
+            height: calc(100%);
+
+            .carousel-description-column {
+                height: calc(100%);
+                .carousel-description {
+                    min-height: 0;
+                    //flex-grow: 1;
+                    flex: 0 1 auto;
+                    overflow: hidden;
+                    text-overflow: hidden;
+                    // display: -webkit-box;
+                    // -webkit-box-orient: vertical;
+                    width: calc(100%);
+
+                    p {
+                        display: contents;
+                    }
+                    p:after, p:first-child:before {
+                        content: "\A";
+                        white-space: pre;
+                        display: block;
+                        line-height: 1em;
+                    }
+                    p:not(:last-child) {
+                        margin-bottom: 1em;
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        padding: 0rem 0rem;
+        button.splide__arrow--prev {
+            left: 0;
+        }
+        button.splide__arrow--next {
+            right: 0;
+        }
+        .splide__slide .container {
+            margin: 1rem 1rem;
+            padding: 1rem;
+            max-height: 80vh;
+            height: 80vh;
+        }
+    }
+}
+
+section#mission {
+    background-image: url({{ (resources.Get "img/bg/light-grey-terrazzo.webp").RelPermalink }});
+    background-blend-mode: multiply;
+    background-color: $primary-light;
+}
+
+img.avatar {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+
+    -webkit-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+}
+
+// Event Card
+.event-card {
+    .event-date-icon {
+        width: 4rem;
+        margin: 1rem !important;
+        span {
+            display:block;
+            font-size:1rem;
+            line-height:1rem;
+            text-align:center;
+        }
+        .event-date-icon-month {
+            background-color: $primary;
+            color: white;
+            position: relative;
+            padding: .25em .4em;
+            font-weight: $weight-bold;
+            line-height: 1;
+            white-space: nowrap;
+            border-radius: .25rem;
+            abbr {
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+        }
+        .event-date-icon-day {
+            color: $secondary;
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .event-date-icon-year {
+            border-top: 1px solid #dee2e6 !important;
+            color: $grey !important;
+            font-size: 0.875rem;
+            padding: .25em .4em;
+            font-weight: $weight-bold;
+            line-height: 1;
+            white-space: nowrap;
+            border-radius: .25rem;
+        }
+    }
+    .event-details {
+        padding: 1rem !important;
+        border-left: 1px solid #dee2e6 !important;
+        span.icon {
+            margin-right: 1rem;
+        }
+        .event-time {
+            margin-bottom: .5rem;
+        }
+        .event-location {
+
+        }
+    }
+}
+
+// Bulma Modal Gallery
+.gallery {
+    .gallery-thumbnail {
+        cursor: pointer;
+        margin: 0.25rem;
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            transition: all 0.5s ease-in-out;
+        }
+    }
+
+    .gallery-modal-content {
+        width: 90%;
+        overflow: hidden;
+        max-height: 90vh;
+    
+        .gallery-prev,
+        .gallery-next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .gallery-next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+    
+        .gallery-item-slide {
+            display: none;
+            box-sizing: border-box;
+            text-align: center;
+    
+            figure {
+                display: inline-block;
+                position: relative;
+                img {
+                    max-width: 100%;
+                    max-height: 90vh;
+                    object-fit: cover;
+                }
+                figcaption {
+                    background: rgba(250,250,250, .8);
+                    bottom: 0;
+                    box-sizing: border-box;
+                    position: absolute;
+                    width: 100%;
+                    height: 4rem;
+                    padding: 1rem;
+                    overflow: hidden;
+                }
+                p { 
+                    opacity: 0;
+                    margin-top: .5rem;
+                 }
+                &:hover {
+                    figcaption.has-description {
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 50%;
+                        transition: height .5s ease-in;
+    
+                        p {
+                            opacity: 1;
+                            transition: opacity .5s ease-in .6s;
+                        }
+                    }
+                    
+                }
+            }
+    
+            @media screen and (max-width: 700px) {
+                figure {
+                    &:hover {
+                        figcaption.has-description {
+                            height: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+div.recent-posts-vertical {
+    height: 655px;
+    display: flex;
+    flex-direction: column;
+    .card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        p {
+            flex: 1;
+        }
+    }
+}
+
+div.recent-posts {
+    .card-image, .media-left, .media-right {
+        figure {
+            position: relative;
+            figcaption {
+                background: rgba(250,250,250, .8);
+                bottom: 0;
+                box-sizing: border-box;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                padding: 1rem;
+                overflow: hidden;
+                opacity: 0;
+                display: flex;
+                flex-wrap: wrap;
+                align-content: center;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+    &:hover {
+        .card-image, .media-left, .media-right {
+            figure {
+                figcaption {
+                    position: absolute;
+                    bottom: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 1;
+                    transition: all .2s ease-in;
+                }
+            }
+        }
+    }
+}
+
+nav.jatgam__footer-nav {
+    margin-top: 1em;
+}
+
+#jatgam__page-breadcrumb {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.map-container {
+    position: relative;
+    height: 400px;
+    .map-markers {
+        display: hidden;
+    }
+    #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        // height: 180px;
+    }
+}
+
+
+// Custom Styles
+{{ $customStylesTemplate := resources.Get "css/custom_styles.scss" }}
+{{ $customStyles := $customStylesTemplate | resources.ExecuteAsTemplate "custom_stylesheet_temp.scss" . }}
+{{ $customStyles.Content }}

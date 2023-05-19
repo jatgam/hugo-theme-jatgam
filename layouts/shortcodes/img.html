@@ -1,0 +1,9 @@
+{{ $style := default (.Get "style") "" }}
+<figure class="{{ $style }}">
+    <picture>
+        <img src="{{ .Get "src" }}" alt="{{ .Get "alt" }}">
+    </picture>
+{{ if .Get "caption" }}
+    <figcaption>{{ .Get "caption" }}</figcaption>
+{{ end }}
+</figure>

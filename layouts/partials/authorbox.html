@@ -1,0 +1,45 @@
+{{- $authors := .Params.authors -}}
+<div class="tile is-anscestor"></div>
+{{- range $authors -}}
+    {{ $name := . }}
+    {{ $avatar := false }}
+    {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
+    {{ with $.Site.GetPage $path }}
+        {{- if index .Params "avatar" -}}
+            {{ if .Resources.GetMatch .Params.avatar }}
+                {{ $avatar = (.Resources.GetMatch .Params.avatar).Resize "48x48" }}
+            {{ end }}
+        {{- end -}}
+        {{- if (not $avatar) -}}
+            {{ $avatar = (resources.Get "img/authors/default.png").Resize "48x48" }}
+        {{- end -}}
+        <div class="tile is-6 is-parent">
+            <div class="tile is-child card">
+                <div class="card-content">
+                    <div class="media">
+                        {{- with $avatar }}
+                        <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img class="avatar" src="{{ .RelPermalink }}" alt="{{ $name }}">
+                        </figure>
+                        </div>
+                        {{- end -}}
+                        {{- with .Params.name }}
+                        <div class="media-content">
+                        <p class="title is-4">{{ . }}</p>
+                        <p class="subtitle is-6">Title?</p>
+                        </div>
+                        {{- end -}}
+                    </div>
+                
+                    {{- with .Params.bio -}}
+                    <div class="content">
+                        {{ . }}
+                    </div>
+                    {{- end -}}
+                </div>
+            </div>
+        </div>
+    {{- end -}}
+</div>
+{{- end -}}

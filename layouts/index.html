@@ -1,0 +1,27 @@
+{{ define "main" }}
+
+  {{ with .Site.Params.Widgets.HomepageBanner }}
+    {{ if default false .enable }}
+      {{ partial "banner.html" . }}
+    {{ end }}
+  {{ end }}
+  {{ partial "carousel.html" . }}
+
+  {{ partial "notices.html" . }}
+  {{ partial "mission.html" . }}
+
+  {{ if isset .Site.Params.Widgets "customhomepagesection" }}
+  {{ if default false .Site.Params.Widgets.CustomHomepageSection.enable }}
+    {{ partial "custom_homepage_section.html" . }}
+  {{ end }}
+  {{ end }}
+
+  {{ partial "recentPosts.html" . }}
+
+  {{ if .Content }}
+    <section>
+      {{ .Content }}
+    </section>
+  {{ end }}
+
+{{ end }}

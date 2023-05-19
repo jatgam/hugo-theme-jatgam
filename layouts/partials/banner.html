@@ -1,0 +1,8 @@
+<section class="hero is-info is-{{ $.Size }} {{ with $.Image }}has-background{{ end }}">
+    {{ with $.Image }}<img class="hero-background" src="{{ . }}">{{ end }}
+    <div class="hero-body">
+        <div class="container">
+            <div class="has-text-centered"><h1 class="is-size-6-mobile is-size-4-tablet is-size-2-desktop has-text-weight-bold is-family-monospace has-text-white has-background-primary">{{ $.Text }}</h1></div>
+        </div>
+    </div>
+</section>
