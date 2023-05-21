@@ -1,18 +1,16 @@
-<div class="container" id="jatgam__page-breadcrumb">
-    <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            {{ range .Ancestors.Reverse }}
-            <li>
-                {{ if .IsHome }}
-                <a href="{{ .RelPermalink }}"><span class="icon"><i class='ri-home-3-fill ri-xl has-text-primary'></i></span></a>
-                {{ else }}
-                <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-                {{ end }}
-            </li>
+<nav class="breadcrumb is-small" aria-label="breadcrumbs">
+    <ul>
+        {{ range .Ancestors.Reverse }}
+        <li>
+            {{ if .IsHome }}
+            <a href="{{ .RelPermalink }}"><span class="icon is-small"><i class='ri-home-3-fill ri-lg has-text-primary'></i></span></a>
+            {{ else }}
+            <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
             {{ end }}
-            <li class="is-active">
-                <a aria-current="page" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+        </li>
+        {{ end }}
+        <li class="is-active">
+            <a aria-current="page" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        </li>
+    </ul>
+</nav>

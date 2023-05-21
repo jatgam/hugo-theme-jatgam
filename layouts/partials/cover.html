@@ -1,5 +1,4 @@
 {{ $cover := false }}
-{{ $defaultCover := false }}
 {{- $autoCover := default $.Site.Params.autoCover false }}
 
 {{- if index .Params "cover" -}}
@@ -22,18 +21,29 @@
   {{- end -}}
 {{- end -}}
 
-{{ if (not $cover) }}
-    {{ $defaultCover = resources.Get "img/bg/light-grey-terrazzo.webp" }}
-    
+{{ if $cover }}
+<section class="section py-2"><div class="container">{{ partial "breadcrumb.html" . }}</div></section>
 {{ end }}
-
-<div class="hero {{ if $cover }}is-halfheight has-background{{ else }}is-small has-background-primary-light{{ end }}" {{ if $defaultCover }}style="background-image: url({{ $defaultCover.RelPermalink }}); background-blend-mode: multiply;"{{ end }}>
+<div class="hero {{ if $cover }}is-halfheight has-background{{ else }}has-background-primary-light{{ end }}">
     {{ if $cover }}
     <img src="{{ $cover }}" class="hero-background" style="filter: brightness({{ .Params.Brightness | default "70%" }});" alt="{{ .Title | plainify | default " " }}" title="{{ .Params.CoverCredit |plainify|default "Cover Image" }}" />
     {{ end }}
+    {{ if (not $cover) }}
+    <div class="hero-head has-padding">
+      <div class="container">{{ partial "breadcrumb.html" . }}</div>
+    </div>
+    {{ end }}
     <div class="hero-body">
         <div class="container">
-            <h3 class="title is-3 has-text-weight-bold {{ if $cover }}has-text-white has-text-centered{{ end }}">{{ .Title | markdownify }}</h2>
+            <h3 class="title has-text-weight-bold {{ if $cover }}has-text-white has-text-centered is-2{{ else }}is-3{{ end }}">{{ .Title | markdownify }}</h3>
         </div>
     </div>
+    {{ if (not $cover) }}
+    <div class="hero-foot has-padding">
+      <div class="container has-text-right is-size-7">{{ partial "byLine.html" . }}</div>
+    </div>
+    {{ end }}
 </div>
+{{ if $cover }}
+<section class="section py-2"><div class="container has-text-right is-size-7">{{ partial "byLine.html" . }}</div></section>
+{{ end }}

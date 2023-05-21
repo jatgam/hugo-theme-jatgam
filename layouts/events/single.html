@@ -1,5 +1,4 @@
 {{ define "main" }}
-{{- partial "breadcrumb.html" . }}
 {{- partial "cover.html" . }}
 {{- $location := partial "location.html" . }}
 {{ $locationModalId := $location.name | sha256 }}

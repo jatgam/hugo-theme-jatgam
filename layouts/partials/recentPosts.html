@@ -2,8 +2,8 @@
 {{ if default false .Site.Params.Widgets.RecentPosts.enable }}
 <section class="section" id="recentPosts">
     <div class="container">
-        <div class="has-text-centered block"><h1 class="title is-size-3-mobile is-size-2 is-uppercase is-section-title">{{ .Site.Params.Widgets.RecentPosts.title | chomp }}</h1></div>
-        <p class="block blurb has-text-centered">{{ .Site.Params.Widgets.RecentPosts.blurb }}</p>
+        <div class="has-text-centered block"><h1 class="title is-size-3-mobile is-size-2 is-uppercase is-section-title is-family-title">{{ .Site.Params.Widgets.RecentPosts.title | chomp }}</h1></div>
+        <p class="block blurb has-text-centered has-text-weight-light">{{ .Site.Params.Widgets.RecentPosts.blurb }}</p>
         {{ $posts := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
         <div class="columns is-multiline is-centered">
         {{- range first 4 $posts.Pages -}}
