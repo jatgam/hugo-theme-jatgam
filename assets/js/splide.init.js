@@ -18,7 +18,7 @@ function computeStyle(elem, prop) {
 function getLineHeight(elem) {
     let lh = computeStyle(elem, "line-height");
     if (lh === "normal") {
-      lh = parseFloat(parseFloat(computeStyle(elem, "font-size")).toFixed(0)) * 1.0; // bulma default line height
+      lh = parseFloat(parseFloat(computeStyle(elem, "font-size")).toFixed(0)) * 1.5; // bulma default line height
     }
     return parseFloat(parseFloat(lh).toFixed(0));
 }

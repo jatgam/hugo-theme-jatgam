@@ -67,18 +67,13 @@
                                     <div class="columns is-vcentered is-centered">
                                         <div class="column is-half has-text-centered is-flex is-flex-direction-column is-justify-content-center carousel-description-column">
                                             <div>
-                                                <h1 class="title is-size-2-tablet is-size-3-mobile has-text-weight-bold">{{ .Title }}</h1>
-                                                <h2 class="subtitle is-size-4-tablet is-size-5-mobile has-text-weight-bold">{{ (time (default .Date .Params.startDateTime)).Format "Monday, January 2, 2006 @ 3:04PM MST" }}</h2>
+                                                <h1 class="title is-size-2-tablet is-size-3-mobile has-text-weight-bold is-family-title">{{ .Title }}</h1>
+                                                <h2 class="subtitle is-size-4-tablet is-size-5-mobile has-text-weight-bold is-family-title">{{ (time (default .Date .Params.startDateTime)).Format "Monday, January 2, 2006 @ 3:04PM MST" }}</h2>
                                             </div>
-                                            <div class="is-size-5-tablet is-size-6-mobile content carousel-description">{{ .Description | safeHTML }}</div>
+                                            <div class="is-size-5-tablet is-size-6-mobile content carousel-description has-text-weight-light">{{ .Description | safeHTML }}</div>
                                             <div class="has-text-centered"><a href="{{ .RelPermalink }}" class="button is-primary is-light is-responsive">Read More</a></div>
-                                            <div class="column is-half is-flex is-flex-direction-column is-justify-content-center is-hidden-tablet">
-                                                <figure class="image is-5by3">
-                                                    <img class="" src="{{ $cover }}" draggable="false" />
-                                                </figure>
-                                            </div>
                                         </div>
-                                        <div class="column is-half is-flex is-flex-direction-column is-justify-content-center is-hidden-mobile">
+                                        <div class="column is-half is-flex is-flex-direction-column is-justify-content-center">
                                             <figure class="image is-5by3">
                                                 <img class="" src="{{ $cover }}" draggable="false" />
                                             </figure>
