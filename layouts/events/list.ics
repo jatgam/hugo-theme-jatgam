@@ -61,7 +61,7 @@ END:VTIMEZONE
 {{- $startDate := default .Date .Params.startDateTime }}
 BEGIN:VEVENT
 SUMMARY:{{.Title}}
-DESCRIPTION:{{.Params.summary}}
+DESCRIPTION:{{ replace (.Summary | plainify) "\n" "\\n" }}
 UID:{{ dateFormat "20060102T150405" .Date }}@{{ (default "jatgam-theme-calendar" .Site.Params.Events.calendarName | urlize) }}
 SEQUENCE:0
 STATUS:CONFIRMED
