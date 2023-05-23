@@ -35,7 +35,7 @@
     {{ end }}
     <div class="hero-body">
         <div class="container">
-            <h3 class="title has-text-weight-bold is-family-title has-letter-spacing {{ if $cover }}has-text-white has-text-centered is-2{{ else }}is-3{{ end }}">{{ .Title | markdownify }}</h3>
+            <h3 class="title has-text-weight-bold is-family-title has-letter-spacing {{ if $cover }}has-text-white has-text-centered is-2{{ else }}is-3{{ end }}">{{ .Title }}</h3>
         </div>
     </div>
     {{ if (not $cover) }}
