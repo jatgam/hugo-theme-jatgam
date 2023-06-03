@@ -1,45 +1,52 @@
-{{- $authors := .Params.authors -}}
-<div class="tile is-anscestor"></div>
-{{- range $authors -}}
-    {{ $name := . }}
-    {{ $avatar := false }}
-    {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
-    {{ with $.Site.GetPage $path }}
-        {{- if index .Params "avatar" -}}
-            {{ if .Resources.GetMatch .Params.avatar }}
-                {{ $avatar = (.Resources.GetMatch .Params.avatar).Resize "48x48" }}
-            {{ end }}
-        {{- end -}}
-        {{- if (not $avatar) -}}
-            {{ $avatar = (resources.Get "img/authors/default.png").Resize "48x48" }}
-        {{- end -}}
-        <div class="tile is-6 is-parent">
-            <div class="tile is-child card">
-                <div class="card-content">
-                    <div class="media">
-                        {{- with $avatar }}
-                        <div class="media-left">
-                        <figure class="image is-48x48">
-                            <img class="avatar" src="{{ .RelPermalink }}" alt="{{ $name }}">
-                        </figure>
+{{- $authors := .authors | default slice -}}
+{{ if not (reflect.IsSlice $authors)}}
+    {{ errorf (printf `authorBox: expected a slice input %T` $authors) }}
+{{ end}}
+{{ with $authors }}
+{{ if gt (len .) 0 }}
+<div class="tile is-anscestor">
+    <div class="tile is-12 is-parent">
+    {{- range . -}}
+        {{ $name := . }}
+        {{ $avatar := false }}
+        {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
+        {{ with site.GetPage $path }}
+            {{- if index .Params "avatar" -}}
+                {{ if .Resources.GetMatch .Params.avatar }}
+                    {{ $avatar = (.Resources.GetMatch .Params.avatar).Resize "48x48" }}
+                {{ end }}
+            {{- end -}}
+            {{- if (not $avatar) -}}
+                {{ $avatar = (resources.Get "img/authors/default.png").Resize "48x48" }}
+            {{- end -}}
+            <div class="tile is-6 is-child">
+                <div class="card mx-4">
+                    <div class="card-content">
+                        <div class="media">
+                            {{- with $avatar }}
+                            <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img class="avatar" src="{{ .RelPermalink }}" alt="{{ $name }}">
+                            </figure>
+                            </div>
+                            {{- end -}}
+                            <div class="media-content">
+                            <p class="title is-4">{{ if $.Site.Params.showAuthorLinks | default false }}<a href="{{ .RelPermalink }}">{{ .Params.name }}{{ else }}{{ .Params.name }}{{ end }}</p>
+                            {{ with .Params.role }}<p class="subtitle is-6">{{ . }}</p>{{ end }}
+                            </div>
                         </div>
-                        {{- end -}}
-                        {{- with .Params.name }}
-                        <div class="media-content">
-                        <p class="title is-4">{{ . }}</p>
-                        <p class="subtitle is-6">Title?</p>
+                    
+                        {{- with .Params.bio -}}
+                        <div class="content">
+                            {{ . }}
                         </div>
                         {{- end -}}
                     </div>
-                
-                    {{- with .Params.bio -}}
-                    <div class="content">
-                        {{ . }}
-                    </div>
-                    {{- end -}}
                 </div>
             </div>
-        </div>
+        {{- end -}}
     {{- end -}}
+    </div>
 </div>
-{{- end -}}
+{{ end }}
+{{ end }}

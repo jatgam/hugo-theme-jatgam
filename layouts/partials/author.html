@@ -7,7 +7,7 @@
         <span class="icon">
             <i class='ri-user-fill' style='color: #000000;'></i>
         </span>
-        <span><a href="{{ .RelPermalink }}">{{ $name }}</a></span>
+        <span>{{ if $.Site.Params.showAuthorLinks | default false }}<a href="{{ .RelPermalink }}">{{ $name }}{{ else }}{{ $name }}{{ end }}</a></span>
     </span>
     {{- end -}}
 {{- end -}}

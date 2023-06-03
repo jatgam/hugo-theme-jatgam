@@ -11,16 +11,46 @@
 
         {{ $paginator := .Paginate .RegularPagesRecursive.ByDate.Reverse 5 }}
 
-        {{ range $paginator.Pages }}
-        <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
-        {{ .Date.Format "2006-01-02" }}
-        {{ if .Params.showFullContent }}
-            {{ .Content }}
-        {{ else if .Description }}
-            {{ .Description | markdownify }}
-        {{ else }}
-            {{ .Summary | markdownify }}
-        {{ end }}
+        {{ range $index, $page := $paginator.Pages }}
+        {{ if $index }}<hr>{{ end }}
+        <div class="box recent-posts">
+            <article class="media">
+                {{ $image := false }}
+                {{ if index $page.Params "cover" }}
+                    {{ $image = $page.Params.Cover }}
+                    {{ with $page.Resources.GetMatch $image }}
+                        {{ $newHeight := 300 }}
+                        {{ $newWidth := div (mul $newHeight .Width) .Height }}
+                        {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
+                        {{ $buffer = $buffer.Crop "300x300 center jpeg q100" }}
+                        {{ $image = $buffer.Permalink }}
+                    {{ end }}
+                {{ end }}
+                {{ if and $image (modBool $index 2) }}
+                <div class="media-left">
+                    <figure class="image is-128x128">
+                        <img src="{{ $image }}" height="300" width="300">
+                        <figcaption><a href="{{ $page.RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></figcaption>
+                    </figure>
+                </div>
+                {{ end }}
+                <div class="media-content">
+                    <h4 class="title is-size-4"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h4>
+                    <div class="subtitle is-size-7 mb-3">{{ partial "byLine.html" . }}</div>
+                    <p>{{ if $page.Description }}{{ $page.Description | safeHTML}}{{ else }}{{ $page.Summary | safeHTML}}{{ end }}</p>
+                    
+                </div>
+                {{ if and $image (not (modBool $index 2)) }}
+                <div class="media-right">
+                    <figure class="image is-128x128">
+                        <img src="{{ $image }}" height="300" width="300">
+                        <figcaption><a href="{{ $page.RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></figcaption>
+                    </figure>
+                </div>
+                {{ end }}
+            </article>
+            <div class="has-text-centered mt-5"><a href="{{ .RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></div>
+        </div>
         {{ end }}
 
         {{ partial "pagination.html" . }}

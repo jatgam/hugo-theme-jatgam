@@ -1,10 +1,22 @@
 {{ define "main" }}
+{{ partial "cover.html" . }}
 
-authors
+{{ $authors := slice }}
 
 {{ range .Data.Pages }}
-	<h2>{{ .Params.name }}</h2>
-	<p>{{ .Params.bio }}</p>
+	{{ $authors = $authors| append .Params.name}}
 {{end}}
+
+<section class="section">
+	<div class="container">
+		{{- with .Content -}}
+        <div class="content">
+          {{ . }}
+        </div>
+      {{- end -}}
+		{{ partial "authorbox" (dict "authors" $authors) }}
+	</div>
+</section>
+
 
 {{ end }}

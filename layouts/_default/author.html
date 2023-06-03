@@ -1,9 +1,32 @@
 {{ define "main" }}
-<h1>{{ .Params.name }}</h1>
-<p>{{ .Params.bio }}</p>
+{{ partial "cover.html" . }}
+<section class="section">
+	<div class="container">
+		{{- with .Content -}}
+        <div class="content">
+          	{{ . }}
+        </div>
+      	{{- end -}}
+		<p>{{ .Params.bio }}</p>
 
-<h2>Articles by {{ .Params.name }}</h2>
-{{ range .Pages }}
-	{{ . }}
-{{ end }}
+		{{ if .Site.Params.showAuthorSocials | default true }}
+			{{ $keys := slice }}
+			{{ range $social, $url := .Params.socials }}
+				{{ if $url }}
+					{{ $keys = $keys | append $social }}
+				{{ end }}
+			{{ end }}
+			{{ $sortedKeys := sort $keys }}
+			{{ range $sortedKeys }}
+				<a href="{{ index $.Params.socials . }}">{{ partial "socialIcon.html" . }}</a>
+			{{ end }}
+		{{ end }}
+
+		<h2>Content by {{ .Params.name }}</h2>
+		{{ range .Pages }}
+			{{ .Title }}
+		{{ end }}
+		
+	</div>
+</section>
 {{ end }}
