@@ -1,0 +1,20 @@
+{{ if isset .Site.Params.Widgets "affiliates" }}
+{{ if default false .Site.Params.Widgets.Affiliates.enable }}
+{{ $affiliates := .Site.Params.Widgets.Affiliates.list }}
+<section class="section has-background-white-bis">
+    <div class="container">
+        <div class="has-text-centered block"><h1 class="title is-size-3-mobile is-size-2 is-uppercase is-section-title is-family-title">{{ .Site.Params.Widgets.Affiliates.title | chomp }}</h1></div>
+        <ul class="affiliate-images has-text-centered block">
+        {{ range $affiliates }}
+            {{ $image := resources.Get .logo }}
+            {{ $name := .name }}
+            {{ $url := .url }}
+            {{ with $image }}
+            <li><a href="{{ $url }}" target="_blank"><img src="{{ $image.RelPermalink }}"></a></li>
+            {{ end }}
+        {{ end }}
+        </ul>
+    </div>
+</section>
+{{ end }}
+{{ end }}

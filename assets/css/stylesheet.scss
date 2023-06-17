@@ -412,6 +412,38 @@ nav.jatgam__footer-nav {
     }
 }
 
+// Content Box Image
+figure.boxImage {
+    border: 1px solid $grey-lighter;
+    img {
+        display: block;
+        width: 100%;
+    }
+    figcaption {
+        border-top: 1px solid $grey-lighter;
+        background-color: $grey-lightest;
+        font-style: unset;
+        font-family: $family-secondary;
+    }
+}
+
+ul.affiliate-images {
+    li {
+        list-style-type: none;
+        display: inline-block;
+        text-align: center;
+        margin: 0 20px;
+        img {
+            width: 190px;
+            filter: grayscale(1);
+            transition: all 0.2s ease-out;
+    
+            &:hover {
+                filter: none;
+            }
+        }
+    }
+}
 
 // Custom Styles
 {{ $customStylesTemplate := resources.Get "css/custom_styles.scss" }}

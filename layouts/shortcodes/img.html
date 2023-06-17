@@ -1,9 +1,37 @@
-{{ $style := default (.Get "style") "" }}
-<figure class="{{ $style }}">
-    <picture>
-        <img src="{{ .Get "src" }}" alt="{{ .Get "alt" }}">
-    </picture>
-{{ if .Get "caption" }}
-    <figcaption>{{ .Get "caption" }}</figcaption>
+{{ $imgSrc := .Get "src" }}
+{{ $image := $.Page.Resources.GetMatch $imgSrc }}
+{{ with $image }}
+{{ else }}
+    {{ $image = $.Page.Parent.Resources.GetMatch $imgSrc }}
 {{ end }}
+{{ with $image }}
+{{ else }}
+    {{ $image = resources.GetMatch $imgSrc }}
+{{ end }}
+{{ $caption := .Get "caption" }}
+{{ $alt := .Get "alt" }}
+
+{{ $percentWidth := (.Get "width") | default 40 }}
+
+{{ $isPulledRight := (.Get "pullRight") | default false }}
+{{ $isPulledLeft :=  (.Get "pullLeft") | default false }}
+
+{{ $classes := slice }}
+
+{{ if $isPulledRight }}
+    {{ $classes = $classes | append "is-pulled-right" }}
+{{ end }}
+{{ if $isPulledLeft }}
+    {{ $classes = $classes | append "is-pulled-left" }}
+{{ end }}
+
+{{ with $image }}
+{{ with $caption }}
+<figure style="width:{{ $percentWidth }}%;" class="boxImage {{ delimit $classes " " }}">
+    <img src="{{ $image.RelPermalink }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+    <figcaption>{{ $caption }}</figcaption>
 </figure>
+{{ else }}
+<img style="width:{{ $percentWidth }}%;" src="{{ $image.RelPermalink }}" class="boxImage {{ delimit $classes " " }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+{{ end }}
+{{ end }}
