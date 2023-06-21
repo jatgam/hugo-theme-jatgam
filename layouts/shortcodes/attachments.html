@@ -1,1 +1,1 @@
-{{ partial "attachments" . }}
+{{ partial "attachments" (dict "title" (.Get "title") "pattern" (.Get "pattern") "context" .) }}

@@ -1,11 +1,16 @@
-<div class="panel {{ with .Get "style"}}{{.}}{{ end }}">
-    <p class="panel-heading">{{with .Get "title"}}{{.}}{{end}}</p>
+{{ $style := .style }}
+{{ $title := .title }}
+{{ $pattern := .pattern | default "" }}
+{{ $context := .context }}
+
+{{ with $context }}
+<div class="panel {{ with $style }}{{.}}{{ end }}">
+    <p class="panel-heading">{{with $title}}{{.}}{{end}}</p>
     {{- $filesName := "files" }}
     {{- if ne .Page.File.BaseFileName "index" }}
       {{- $filesName = printf "%s.files" .Page.File.BaseFileName }}
     {{- end}}
     {{- $fileDir := replace .Page.File.Dir "\\" "/" }}
-    {{- $pattern := .Get "pattern" | default "" }}
     {{ if os.FileExists $fileDir }}
         {{- range (readDir (printf "content/%s%s" .Page.File.Dir $filesName) ) }}
         {{- if findRE $pattern .Name}}
@@ -26,5 +31,5 @@
         {{- end}}
         {{- end}}
     {{ end }}
-    {{- .Inner}}
 </div>
+{{ end }}
