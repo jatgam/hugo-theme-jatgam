@@ -13,6 +13,7 @@ endDateTime: {{ dateFormat "2006-01-02T15:04:05Z07:00" (now.AddDate 0 0 +1) }} #
 location:
 description:
 cover: 
+isExternalImage: false #set to true if the cover image is not a hugo asset/page resource
 #hideFromCarousel: true
 ---
 

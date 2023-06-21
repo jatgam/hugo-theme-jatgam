@@ -59,7 +59,9 @@
                                     {{ end }}
                                 {{ end }}
                             {{- else -}}
-                                {{- $cover = absURL .Params.Cover -}}
+                                {{ if .Params.isExternalImage }}
+                                    {{- $cover = absURL .Params.Cover -}}
+                                {{ end }}
                             {{- end -}}
                         {{- end -}}
                             <li class="splide__slide">
@@ -73,11 +75,13 @@
                                             <div class="is-size-5-tablet is-size-6-mobile content carousel-description has-text-weight-light">{{ (.Description | safeHTML) | default .Summary }}</div>
                                             <div class="has-text-centered"><a href="{{ .RelPermalink }}" class="button is-primary is-light is-responsive">Read More</a></div>
                                         </div>
+                                        {{ if $cover }}
                                         <div class="column is-half is-flex is-flex-direction-column is-justify-content-center">
                                             <figure class="image is-5by3">
                                                 <img class="" src="{{ $cover }}" draggable="false" />
                                             </figure>
                                         </div>
+                                        {{ end }}
                                     </div>
                                 </div>
                             </li>
