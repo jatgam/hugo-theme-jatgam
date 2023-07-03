@@ -1,7 +1,7 @@
 {{ $datafile := .Get "datafile" }}
 {{ $galleryPhotos := (dict "photos" slice) }}
 {{ with $datafile }}
-    {{ $galleryPhotos = index .Site.Data $datafile }}
+    {{ $galleryPhotos = index $.Site.Data $datafile }}
 {{ else }}
     {{ $photos := slice }}
     {{ range .Params}}

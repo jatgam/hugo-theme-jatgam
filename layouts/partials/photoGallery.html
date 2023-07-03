@@ -26,29 +26,29 @@
     {{ range $index, $photo := .photos }}
     <img class="gallery-thumbnail" data-target="{{ $galleryID }}" data-slide="{{ $index }}" src="{{ $photo.thumb_url }}" height="{{ $photo.thumb_h }}" width="{{ $photo.thumb_w }}" alt="{{ $photo.title }}">
     {{ end }}
-
-    <div class="modal" id="{{ $galleryID }}">
-        <div class="modal-background"></div>
-        <div class="modal-content is-vcentered gallery-modal-content">
-            {{ range .photos }}
-            <div class="gallery-item-slide" data-parent="{{ $galleryID }}">
-                <figure>
-                    <img src="" data-src="{{ .url }}" height="{{ .url_h }}" width="{{ .url_w }}" title="{{ .title }}" class="gallery-lazy-load">
-                    <figcaption{{ if .description }} class="has-description"{{ end }}>
-                        {{ with .photo_url }}
-                        <strong><a href="{{ . }}" target="_blank" >{{ $.title }}</a></strong>
-                        {{ else }}
-                        <strong>{{ .title }}</strong>
-                        {{ end }}
-                        {{ with .description }}<p>{{ . }}</p>{{ end }}
-                    </figcaption>
-                </figure>
-            </div>
-            {{ end }}
-            <a class="gallery-prev" data-parent="{{ $galleryID }}">&#10094;</a>
-            <a class="gallery-next" data-parent="{{ $galleryID }}">&#10095;</a>
-            <button class="modal-close is-large" aria-label="close"></button>
+</div>
+<div class="modal gallery" id="{{ $galleryID }}">
+    <div class="modal-background"></div>
+    <div class="modal-content is-vcentered gallery-modal-content">
+        {{ range .photos }}
+        <div class="gallery-item-slide" data-parent="{{ $galleryID }}">
+            <figure>
+                <img src="" data-src="{{ .url }}" height="{{ .url_h }}" width="{{ .url_w }}" title="{{ .title }}" class="gallery-lazy-load">
+                <figcaption{{ if .description }} class="has-description"{{ end }}>
+                    {{ $title := .title }}
+                    {{ with .photo_url }}
+                    <strong><a href="{{ . }}" target="_blank" >{{ $title }}</a></strong>
+                    {{ else }}
+                    <strong>{{ $title }}</strong>
+                    {{ end }}
+                    {{ with .description }}<p>{{ . }}</p>{{ end }}
+                </figcaption>
+            </figure>
         </div>
+        {{ end }}
+        <a class="gallery-prev" data-parent="{{ $galleryID }}">&#10094;</a>
+        <a class="gallery-next" data-parent="{{ $galleryID }}">&#10095;</a>
+        <button class="modal-close is-large" aria-label="close"></button>
     </div>
 </div>
 {{ end }}
