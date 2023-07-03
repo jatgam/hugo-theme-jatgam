@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{ partial "cover.html" . }}
+<section class="section">
+  <div class="container">
+
+    <nav class="level">
+    {{ range .RegularPages.ByWeight }}
+        <div class="level-item has-text-centered">
+            <a href="{{.RelPermalink }}">{{ .Title }}</a>
+        </div>
+    {{ end }}
+    </nav>
+
+    <div>
+      {{- with .Content -}}
+        <div class="content">
+          {{ . }}
+        </div>
+      {{- end -}}
+    </div>
+
+    
+
+  </div>
+</section>
+{{ end }}

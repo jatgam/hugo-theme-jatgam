@@ -1,0 +1,28 @@
+{{ $resource := .Page.Resources.GetMatch (.Get "resource") }}
+{{ $showSize := .Get "showSize" | default false }}
+{{ $showIcon := .Get "showIcon" | default true}}
+
+{{ with $resource }}
+    {{ $icon := $resource.Params.icon | default "download" }}
+    {{ $resourceFile := os.Stat (printf "content/%s/" (path.Join (path.Dir $.Page.File.Path) $resource)) }}
+    {{ $size := 0}}
+    {{ $unit := ""}}
+    {{ with $resourceFile}}
+        {{- $size = $resourceFile.Size }}
+        {{- $unit = "Byte" }}
+        {{- if ge $size 1024 }}
+        {{- $size = div $size 1024 }}
+        {{- $unit = "KB" }}
+        {{- end}}
+        {{- if ge $size 1024 }}
+        {{- $size = div $size 1024 }}
+        {{- $unit = "MB" }}
+        {{- end}}
+    {{ end }}
+
+    {{ if $showIcon}}
+    <span class="icon-text"><span class="icon"><i class="ri-file-{{$icon}}-line ri-xl" aria-hidden="true"></i></span><a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{end}}<span></span></span>
+    {{ else }}
+    <a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{ end }}
+    {{ end }}
+{{ end }}

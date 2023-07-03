@@ -1,0 +1,24 @@
+{{ define "main" }}
+{{ partial "cover.html" . }}
+<section class="section">
+  <div class="container">
+
+    <div>
+      {{- with .Content -}}
+        <div class="content">
+          {{ . }}
+        </div>
+      {{- end -}}
+    </div>
+
+    {{ range .Pages.GroupByParam "category" }}
+    {{.Key}}
+    {{ range .Pages }}
+    <a href="{{.RelPermalink}}">{{.Title}}</a>
+    {{.Summary}}
+    {{ end }}
+    {{ end }}
+
+  </div>
+</section>
+{{ end }}

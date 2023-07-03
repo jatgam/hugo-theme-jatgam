@@ -4,7 +4,9 @@
     <div class="container">
         <div class="has-text-centered block"><h1 class="title is-size-3-mobile is-size-2 is-uppercase is-section-title is-family-title">{{ .Site.Params.Widgets.RecentPosts.title | chomp }}</h1></div>
         <p class="block blurb has-text-centered has-text-weight-light">{{ .Site.Params.Widgets.RecentPosts.blurb }}</p>
-        {{ $posts := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+        {{ $multipageStarts := where (where (where (where .Site.Pages "Type" "in" .Site.Params.mainSections) "IsSection" true) "Params.isMultipage" "!=" nil) "Params.isMultipage" true }}
+        {{ $multipageContent := where (where (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) "Params.isMultipage" "!=" nil) "Params.isMultipage" true }}
+        {{ $posts := .Paginate (((where .Site.RegularPages "Type" "in" .Site.Params.mainSections) | complement $multipageContent) | append $multipageStarts).ByDate.Reverse }}
         <div class="columns is-multiline is-centered">
         {{- range first 4 $posts.Pages -}}
             <div class="column is-3-widescreen is-4-desktop is-6-tablet">

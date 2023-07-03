@@ -1,0 +1,18 @@
+{{ define "main" }}
+{{ partial "cover.html" . }}
+<section class="section">
+  <div class="container">
+
+    <div>
+      {{- with .Content -}}
+        <div class="content">
+          {{ . }}
+        </div>
+      {{- end -}}
+    </div>
+hi
+    {{ .Parent.RegularPages }}
+
+  </div>
+</section>
+{{ end }}

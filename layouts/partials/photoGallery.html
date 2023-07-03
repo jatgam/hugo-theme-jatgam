@@ -22,7 +22,7 @@
 
 {{ with .photoGallery }}
 {{ $galleryID := jsonify .photos | sha256 }}
-<div class="container is-fluid gallery">
+<div class="container is-fluid has-text-centered gallery">
     {{ range $index, $photo := .photos }}
     <img class="gallery-thumbnail" data-target="{{ $galleryID }}" data-slide="{{ $index }}" src="{{ $photo.thumb_url }}" height="{{ $photo.thumb_h }}" width="{{ $photo.thumb_w }}" alt="{{ $photo.title }}">
     {{ end }}
@@ -35,8 +35,12 @@
                 <figure>
                     <img src="" data-src="{{ .url }}" height="{{ .url_h }}" width="{{ .url_w }}" title="{{ .title }}" class="gallery-lazy-load">
                     <figcaption{{ if .description }} class="has-description"{{ end }}>
-                        <strong><a href="{{ .photo_url }}" target="_blank" >{{ .title }}</a></strong>
-                        {{ if .description }}<p>{{ .description }}</p>{{ end }}
+                        {{ with .photo_url }}
+                        <strong><a href="{{ . }}" target="_blank" >{{ $.title }}</a></strong>
+                        {{ else }}
+                        <strong>{{ .title }}</strong>
+                        {{ end }}
+                        {{ with .description }}<p>{{ . }}</p>{{ end }}
                     </figcaption>
                 </figure>
             </div>

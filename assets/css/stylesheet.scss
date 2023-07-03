@@ -336,6 +336,20 @@ img.avatar {
     }
 }
 
+nav.articleNav {
+    div.level-item {
+        &.is-active {
+            a {
+                color: $text-strong;
+                cursor: default;
+                pointer-events: none;
+            }
+        }
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}
+
 div.recent-posts-vertical {
     height: 655px;
     display: flex;

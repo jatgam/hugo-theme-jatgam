@@ -1,0 +1,24 @@
+{{ define "main" }}
+{{ partial "cover.html" . }}
+<section class="section">
+  <div class="container">
+
+    <nav class="articleNav level is-flex-wrap-wrap is-mobile is-justify-content-center" role="navigation" aria-label="article navigation">
+    {{ range .Parent.RegularPages.ByWeight }}
+        <div class="level-item has-text-centered is-narrow{{ if eq .Page $.Page}} is-active{{end}}">
+            <a href="{{.RelPermalink }}">{{ .Title }}</a>
+        </div>
+    {{ end }}
+    </nav>
+
+    <div>
+      {{- with .Content -}}
+        <div class="content">
+          {{ . }}
+        </div>
+      {{- end -}}
+    </div>
+
+  </div>
+</section>
+{{ end }}

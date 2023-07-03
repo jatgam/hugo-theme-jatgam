@@ -1,4 +1,23 @@
 {{ $datafile := .Get "datafile" }}
-{{ $galleryPhotos := index .Site.Data $datafile }}
+{{ $galleryPhotos := (dict "photos" slice) }}
+{{ with $datafile }}
+    {{ $galleryPhotos = index .Site.Data $datafile }}
+{{ else }}
+    {{ $photos := slice }}
+    {{ range .Params}}
+        {{ $imageResource := $.Page.Resources.GetMatch . }}
+        {{ with $imageResource }}
+            {{ $buffer := .Resize "75x q100" }}
+            {{ $buffer = $buffer.Crop "75x75 center jpeg q100" }}
+            {{ $photo := (dict "title" .Title "thumb_url" $buffer.RelPermalink "thumb_h" $buffer.Height "thumb_w" $buffer.Width "url" $imageResource.RelPermalink "url_h" $imageResource.Height "url_w" $imageResource.Width) }}
+            {{ with $imageResource.Params.description }}
+                {{ $photo = merge $photo (dict "description" . ) }}
+            {{ end }}
+
+            {{ $photos = $photos | append $photo }}
+        {{ end }}
+    {{ end }}
+    {{ $galleryPhotos = (dict "photos" $photos) }}
+{{ end }}
 
 {{ partial "photoGallery" (dict "photoGallery" $galleryPhotos) }}

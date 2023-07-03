@@ -1,15 +1,23 @@
 {{ $imgSrc := .Get "src" }}
-{{ $image := $.Page.Resources.GetMatch $imgSrc }}
-{{ with $image }}
+{{ $isExternal := (.Get "isExternal") | default false }}
+{{ $image := false}}
+{{ if $isExternal }}
+    {{ $image = $imgSrc }}
 {{ else }}
-    {{ $image = $.Page.Parent.Resources.GetMatch $imgSrc }}
+    {{ $image = $.Page.Resources.GetMatch $imgSrc }}
+    {{ with $image }}
+    {{ else }}
+        {{ $image = $.Page.Parent.Resources.GetMatch $imgSrc }}
+    {{ end }}
+    {{ with $image }}
+    {{ else }}
+        {{ $image = resources.GetMatch $imgSrc }}
+    {{ end }}
 {{ end }}
-{{ with $image }}
-{{ else }}
-    {{ $image = resources.GetMatch $imgSrc }}
-{{ end }}
+
 {{ $caption := .Get "caption" }}
 {{ $alt := .Get "alt" }}
+{{ $link := .Get "link" }}
 
 {{ $percentWidth := (.Get "width") | default 40 }}
 
@@ -28,10 +36,14 @@
 {{ with $image }}
 {{ with $caption }}
 <figure style="width:{{ $percentWidth }}%;" class="boxImage {{ delimit $classes " " }}">
-    <img src="{{ $image.RelPermalink }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+    {{ with $link }}<a href="{{$link}}" target="_blank">{{ end }}
+    <img src="{{ if $isExternal }}{{ $image }}{{ else }}{{ $image.RelPermalink }}{{ end }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+    {{ with $link }}</a>{{ end }}
     <figcaption>{{ $caption }}</figcaption>
 </figure>
 {{ else }}
+{{ with $link }}<a href="{{$link}}" target="_blank">{{ end }}
 <img style="width:{{ $percentWidth }}%;" src="{{ $image.RelPermalink }}" class="boxImage {{ delimit $classes " " }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+{{ with $link }}</a>{{ end }}
 {{ end }}
 {{ end }}
