@@ -21,7 +21,7 @@
 */}}
 
 {{ with .photoGallery }}
-{{ $galleryID := jsonify .photos | sha256 }}
+{{ $galleryID := printf "gallery-%s" (jsonify .photos | sha256) }}
 <div class="container is-fluid has-text-centered gallery">
     {{ range $index, $photo := .photos }}
     <img class="gallery-thumbnail" data-target="{{ $galleryID }}" data-slide="{{ $index }}" src="{{ $photo.thumb_url }}" height="{{ $photo.thumb_h }}" width="{{ $photo.thumb_w }}" alt="{{ $photo.title }}">
@@ -46,8 +46,10 @@
             </figure>
         </div>
         {{ end }}
+        {{ if gt (len .photos) 1 }}
         <a class="gallery-prev" data-parent="{{ $galleryID }}">&#10094;</a>
         <a class="gallery-next" data-parent="{{ $galleryID }}">&#10095;</a>
+        {{ end }}
         <button class="modal-close is-large" aria-label="close"></button>
     </div>
 </div>

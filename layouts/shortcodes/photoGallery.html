@@ -9,6 +9,16 @@
         {{ with $imageResource }}
             {{ $buffer := .Resize "75x q100" }}
             {{ $buffer = $buffer.Crop "75x75 center jpeg q100" }}
+
+            {{ if or (not (eq $buffer.Width 75)) (not (eq $buffer.Height 75)) }}
+                {{ with resources.Get "img/75x75WhiteSq.png" }}
+                    {{ $overlayX := sub (div 75 2) (div $buffer.Width 2)}}
+                    {{ $overlayY := sub (div 75 2) (div $buffer.Height 2)}}
+
+                    {{ $buffer = .Filter (images.Overlay $buffer $overlayX $overlayY) }}
+                {{ end }}
+            {{ end }}
+
             {{ $photo := (dict "title" .Title "thumb_url" $buffer.RelPermalink "thumb_h" $buffer.Height "thumb_w" $buffer.Width "url" $imageResource.RelPermalink "url_h" $imageResource.Height "url_w" $imageResource.Width) }}
             {{ with $imageResource.Params.description }}
                 {{ $photo = merge $photo (dict "description" . ) }}

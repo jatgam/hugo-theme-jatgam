@@ -3,21 +3,132 @@
 <section class="section">
   <div class="container">
 
-    <div>
-      {{- with .Content -}}
-        <div class="content">
-          {{ . }}
+    <div class="columns is-centered">
+        <div class="column is-three-quarters">
+            {{- with .Content -}}
+                <div class="content">
+                {{ . }}
+                </div>
+            {{- end -}}
+
+            {{ range .Pages }}
+                {{ if and .IsSection (not .Params.isMultipage) }}
+                    {{ if gt (len .Pages) 0}}
+                        <h4 class="title is-size-4">{{ .Title }}</h4>
+
+                        <div class="columns is-multiline">
+                        {{ range $index, $page := .Pages }}
+                            {{ if or (and $page.IsPage (not $page.Params.isMultipage)) (and $page.IsSection ($page.Params.isMultipage)) }}
+                                    <div class="column is-half">
+                                    <div class="box article-list">
+                                        <article class="media">
+                                            {{ $image := false }}
+                                            {{ if index $page.Params "cover" }}
+                                                {{ $image = $page.Params.Cover }}
+                                                {{ with $page.Resources.GetMatch $image }}
+                                                    {{ $newHeight := 300 }}
+                                                    {{ $newWidth := div (mul $newHeight .Width) .Height }}
+                                                    {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
+                                                    {{ $buffer = $buffer.Crop "300x300 center jpeg q100" }}
+                                                    {{ $image = $buffer.Permalink }}
+                                                {{ end }}
+                                            {{ end }}
+                                            {{ if $image }}
+                                            <div class="media-left">
+                                                <figure class="image is-128x128">
+                                                    <img src="{{ $image }}" height="300" width="300">
+                                                    <figcaption><a href="{{ $page.RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></figcaption>
+                                                </figure>
+                                            </div>
+                                            {{ end }}
+                                            <div class="media-content">
+                                                <h5 class="title is-size-5"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h5>
+                                                <div class="subtitle is-size-7 mb-3">{{ partial "byLine.html" . }}</div>
+                                                <p>{{ if $page.Description }}{{ $page.Description | safeHTML}}{{ else }}{{ $page.Summary | safeHTML}}{{ end }}</p>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    </div>
+                            {{ else if and $page.IsSection (not $page.Params.isMultipage)}}
+                                <div class="column is-half">
+                                    <div class="box article-list">
+                                        <article class="media">
+                                            {{ $image := false }}
+                                            {{ if index $page.Params "cover" }}
+                                                {{ $image = $page.Params.Cover }}
+                                                {{ with $page.Resources.GetMatch $image }}
+                                                    {{ $newHeight := 300 }}
+                                                    {{ $newWidth := div (mul $newHeight .Width) .Height }}
+                                                    {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
+                                                    {{ $buffer = $buffer.Crop "300x300 center jpeg q100" }}
+                                                    {{ $image = $buffer.Permalink }}
+                                                {{ end }}
+                                            {{ end }}
+                                            {{ if $image }}
+                                            <div class="media-left">
+                                                <figure class="image is-128x128">
+                                                    <img src="{{ $image }}" height="300" width="300">
+                                                    <figcaption><a href="{{ $page.RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></figcaption>
+                                                </figure>
+                                            </div>
+                                            {{ end }}
+                                            <div class="media-content">
+                                                <h5 class="title is-size-5"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h5>
+                                                <p>{{ if $page.Description }}{{ $page.Description | safeHTML}}{{ else }}{{ $page.Summary | safeHTML}}{{ end }}</p>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+                            {{ end }}
+                        {{ end }}
+                        </div>
+
+                    {{end}}
+                {{ end }}
+            {{ end }}
+
+            <div class="columns is-multiline">
+            {{ range $index, $page := .Pages }}
+                {{ if or (and $page.IsPage (not $page.Params.isMultipage)) (and $page.IsSection ($page.Params.isMultipage)) }}
+                        <div class="column is-half">
+                        <div class="box article-list">
+                        <article class="media">
+                        {{ $image := false }}
+                        {{ if index $page.Params "cover" }}
+                            {{ $image = $page.Params.Cover }}
+                            {{ with $page.Resources.GetMatch $image }}
+                                {{ $newHeight := 300 }}
+                                {{ $newWidth := div (mul $newHeight .Width) .Height }}
+                                {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
+                                {{ $buffer = $buffer.Crop "300x300 center jpeg q100" }}
+                                {{ $image = $buffer.Permalink }}
+                            {{ end }}
+                        {{ end }}
+                        {{ if $image }}
+                        <div class="media-left">
+                            <figure class="image is-128x128">
+                                <img src="{{ $image }}" height="300" width="300">
+                                <figcaption><a href="{{ $page.RelPermalink }}" class="button is-primary is-responsive is-outlined">Read More</a></figcaption>
+                            </figure>
+                        </div>
+                        {{ end }}
+                        <div class="media-content">
+                            <h5 class="title is-size-5"><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h5>
+                            <div class="subtitle is-size-7 mb-3">{{ partial "byLine.html" . }}</div>
+                            <p>{{ if $page.Description }}{{ $page.Description | safeHTML}}{{ else }}{{ $page.Summary | safeHTML}}{{ end }}</p>
+                            
+                        </div>
+                        </article>
+                        </div>
+                        </div>
+                {{ end }}
+            {{ end }}
+            </div>
+
         </div>
-      {{- end -}}
     </div>
 
-    {{ range .Pages.GroupByParam "category" }}
-    {{.Key}}
-    {{ range .Pages }}
-    <a href="{{.RelPermalink}}">{{.Title}}</a>
-    {{.Summary}}
-    {{ end }}
-    {{ end }}
+    
 
   </div>
 </section>

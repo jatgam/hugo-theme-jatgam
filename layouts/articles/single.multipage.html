@@ -11,12 +11,14 @@
     {{ end }}
     </nav>
 
-    <div>
-      {{- with .Content -}}
-        <div class="content">
-          {{ . }}
+    <div class="columns is-centered">
+        <div class="column is-three-quarters">
+            {{- with .Content -}}
+                <div class="content">
+                {{ . }}
+                </div>
+            {{- end -}}
         </div>
-      {{- end -}}
     </div>
 
   </div>

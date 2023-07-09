@@ -3,15 +3,15 @@
 <section class="section">
   <div class="container">
 
-    <div>
-      {{- with .Content -}}
-        <div class="content">
-          {{ . }}
+    <div class="columns is-centered">
+        <div class="column is-three-quarters">
+            {{- with .Content -}}
+                <div class="content">
+                {{ . }}
+                </div>
+            {{- end -}}
         </div>
-      {{- end -}}
     </div>
-hi
-    {{ .Parent.RegularPages }}
 
   </div>
 </section>

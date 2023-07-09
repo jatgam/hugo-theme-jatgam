@@ -21,8 +21,8 @@
     {{ end }}
 
     {{ if $showIcon}}
-    <span class="icon-text"><span class="icon"><i class="ri-file-{{$icon}}-line ri-xl" aria-hidden="true"></i></span><a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{end}}<span></span></span>
+<span class="icon-text"><span class="icon"><i class="ri-file-{{$icon}}-line ri-xl" aria-hidden="true"></i></span><a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{end}}<span></span></span>
     {{ else }}
-    <a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{ end }}
+<a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{ end }}
     {{ end }}
 {{ end }}

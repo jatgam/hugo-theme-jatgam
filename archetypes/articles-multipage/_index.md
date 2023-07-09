@@ -5,6 +5,6 @@ cascade:
     date: {{ .Date }}
     isMultipage: true
     authors:
-category:
+summary:
 ---
 

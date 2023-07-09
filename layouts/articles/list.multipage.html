@@ -3,23 +3,23 @@
 <section class="section">
   <div class="container">
 
-    <nav class="level">
+    <nav class="articleNav level is-flex-wrap-wrap is-mobile is-justify-content-center" role="navigation" aria-label="article navigation">
     {{ range .RegularPages.ByWeight }}
-        <div class="level-item has-text-centered">
+        <div class="level-item has-text-centered is-narrow">
             <a href="{{.RelPermalink }}">{{ .Title }}</a>
         </div>
     {{ end }}
     </nav>
 
-    <div>
-      {{- with .Content -}}
-        <div class="content">
-          {{ . }}
+    <div class="columns is-centered">
+        <div class="column is-three-quarters">
+            {{- with .Content -}}
+                <div class="content">
+                {{ . }}
+                </div>
+            {{- end -}}
         </div>
-      {{- end -}}
     </div>
-
-    
 
   </div>
 </section>
