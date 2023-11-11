@@ -1,25 +1,28 @@
 {{ $cover := false }}
 {{- $autoCover := default $.Site.Params.autoCover false }}
+{{ $hideCover := .Params.hideCover | default false }}
 
-{{- if index .Params "cover" -}}
-  {{- if .Resources.GetMatch .Params.Cover }}
-    {{ with .Resources.GetMatch .Params.Cover }}
-      {{ if gt .Width 1440 }}
-        {{ $cover = (.Resize "1440x jpeg q100").RelPermalink }}
-      {{ else }}
-        {{- $cover = .RelPermalink -}}
+{{ if (not $hideCover) }}
+  {{- if index .Params "cover" -}}
+    {{- if .Resources.GetMatch .Params.Cover }}
+      {{ with .Resources.GetMatch .Params.Cover }}
+        {{ if gt .Width 1440 }}
+          {{ $cover = (.Resize "1440x jpeg q100").RelPermalink }}
+        {{ else }}
+          {{- $cover = .RelPermalink -}}
+        {{ end }}
       {{ end }}
-    {{ end }}
-  {{- else -}}
-    {{- $cover = absURL .Params.Cover -}}
-  {{- end -}}
-{{- else if $.Site.Params.AutoCover -}}
-  {{- if (not .Params.Cover) -}}
-    {{- if .Resources.GetMatch "cover.*" -}}
-      {{- $cover = (.Resources.GetMatch "cover.*").RelPermalink -}}
+    {{- else -}}
+      {{- $cover = absURL .Params.Cover -}}
+    {{- end -}}
+  {{- else if $.Site.Params.AutoCover -}}
+    {{- if (not .Params.Cover) -}}
+      {{- if .Resources.GetMatch "cover.*" -}}
+        {{- $cover = (.Resources.GetMatch "cover.*").RelPermalink -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
-{{- end -}}
+{{ end }}
 
 {{ if $cover }}
 <section class="section py-2"><div class="container">{{ partial "breadcrumb.html" . }}</div></section>

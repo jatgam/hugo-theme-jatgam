@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    (document.querySelectorAll('.model-open-button') || []).forEach(($trigger) => {
+    (document.querySelectorAll('.modal-open-button') || []).forEach(($trigger) => {
         const target = $trigger.dataset.target;
         const modal = document.getElementById(target);
   

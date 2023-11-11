@@ -38,31 +38,39 @@
                     {{ end }}
                     {{ range first 5 $events }}
                         {{ $cover := false }}
+                        {{ $imgResource := false }}
                         {{- if index .Params "cover" -}}
                             {{- if .Resources.GetMatch .Params.Cover }}
                                 {{ with .Resources.GetMatch .Params.Cover }}
-                                    {{ $currentRatio := div (float .Width) (float .Height) }}
-                                    {{ $wantedRatio := div (float 5) (float 3) }}
-                                    {{ $newWidth := .Width }}
-                                    {{ $newHeight := .Height }}
-                                    {{ if (gt $currentRatio $wantedRatio) }}
-                                        {{ $newWidth = int (mul $wantedRatio .Height) }}
-                                    {{ else }}
-                                        {{ $newHeight = int (div .Width $wantedRatio) }}
-                                    {{ end }}
-                                    {{ $buffer := .Crop (printf "%dx%d center jpeg q100" $newWidth $newHeight) }}
-
-                                    {{ if gt $buffer.Width 1440 }}
-                                        {{ $cover = ($buffer.Resize "1440x jpeg q100").RelPermalink }}
-                                    {{ else }}
-                                        {{- $cover = .RelPermalink -}}
-                                    {{ end }}
+                                    {{ $imgResource = . }}
+                                {{ end }}
+                            {{- else if resources.GetMatch .Params.Cover -}}
+                                {{ with resources.GetMatch .Params.Cover }}
+                                    {{ $imgResource = . }}
                                 {{ end }}
                             {{- else -}}
                                 {{ if .Params.isExternalImage }}
                                     {{- $cover = absURL .Params.Cover -}}
                                 {{ end }}
                             {{- end -}}
+                            {{ with $imgResource }}
+                                {{ $currentRatio := div (float .Width) (float .Height) }}
+                                {{ $wantedRatio := div (float 5) (float 3) }}
+                                {{ $newWidth := .Width }}
+                                {{ $newHeight := .Height }}
+                                {{ if (gt $currentRatio $wantedRatio) }}
+                                    {{ $newWidth = int (mul $wantedRatio .Height) }}
+                                {{ else }}
+                                    {{ $newHeight = int (div .Width $wantedRatio) }}
+                                {{ end }}
+                                {{ $buffer := .Crop (printf "%dx%d center jpeg q100" $newWidth $newHeight) }}
+
+                                {{ if gt $buffer.Width 1440 }}
+                                    {{ $cover = ($buffer.Resize "1440x jpeg q100").RelPermalink }}
+                                {{ else }}
+                                    {{- $cover = .RelPermalink -}}
+                                {{ end }}
+                            {{ end }}
                         {{- end -}}
                             <li class="splide__slide">
                                 <div class="container">

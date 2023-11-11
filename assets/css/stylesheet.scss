@@ -29,6 +29,9 @@ $navbar-item-img-max-height: 5rem;
 // import Bulma Sticky Tables
 @import "./bulma-sticky-table-2.0.1/_sticky-table.scss";
 
+//import bulma divider
+@import "./bulma-divider-master/src/sass/index.sass";
+
 .is-family-title {
     font-family: $family-title;
 }
@@ -465,6 +468,11 @@ figure.boxImage {
         font-style: unset;
         font-family: $family-secondary;
     }
+}
+
+.boxImage {
+    margin-left: 2em;
+    margin-right: 2em;
 }
 
 ul.affiliate-images {

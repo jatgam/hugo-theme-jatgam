@@ -100,7 +100,7 @@
     <div class="navbar-end">
       <div class="is-flex is-justify-content-center" id="navbar-socials">
         {{- range .Site.Menus.socialbar.ByWeight -}}
-        <a href="{{ .URL }}" class="navbar-item">
+        <a href="{{ .URL }}" target="_blank" class="navbar-item">
           <span class="icon is-medium">
             {{- .Pre | safeHTML -}}
           </span>

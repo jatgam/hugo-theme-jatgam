@@ -7,6 +7,9 @@
     {{ partial "head.html" . }}
     {{ block "extrahead" . }}
     {{ end }}
+    {{ if and (not .Site.IsServer) hugo.IsProduction }}
+    {{ template "_internal/google_analytics.html" . }}
+    {{ end }}
 </head>
 <body>
 

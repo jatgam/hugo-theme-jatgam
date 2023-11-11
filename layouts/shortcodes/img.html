@@ -15,11 +15,12 @@
     {{ end }}
 {{ end }}
 
-{{ $caption := .Get "caption" }}
+{{ $caption := .Get "caption" | safeHTML }}
 {{ $alt := .Get "alt" }}
 {{ $link := .Get "link" }}
 
-{{ $percentWidth := (.Get "width") | default 40 }}
+{{ $width := (.Get "width") | default false }}
+{{ $maxWidth := (.Get "maxWidth") | default false }}
 
 {{ $isPulledRight := (.Get "pullRight") | default false }}
 {{ $isPulledLeft :=  (.Get "pullLeft") | default false }}
@@ -35,7 +36,7 @@
 
 {{ with $image }}
 {{ with $caption }}
-<figure style="width:{{ $percentWidth }}%;" class="boxImage {{ delimit $classes " " }}">
+<figure style="{{with $width}}width:{{ . }};{{end}}{{with $maxWidth}}max-width:{{ . }};{{end}}" class="boxImage {{ delimit $classes " " }}">
     {{ with $link }}<a href="{{$link}}" target="_blank">{{ end }}
     <img src="{{ if $isExternal }}{{ $image }}{{ else }}{{ $image.RelPermalink }}{{ end }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
     {{ with $link }}</a>{{ end }}
@@ -43,7 +44,7 @@
 </figure>
 {{ else }}
 {{ with $link }}<a href="{{$link}}" target="_blank">{{ end }}
-<img style="width:{{ $percentWidth }}%;" src="{{ $image.RelPermalink }}" class="boxImage {{ delimit $classes " " }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+<img style="{{with $width}}width:{{ . }};{{end}}{{with $maxWidth}}max-width:{{ . }};{{end}}" src="{{ $image.RelPermalink }}" class="boxImage {{ delimit $classes " " }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
 {{ with $link }}</a>{{ end }}
 {{ end }}
 {{ end }}

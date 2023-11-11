@@ -1,12 +1,6 @@
 {{ define "main" }}
 {{ partial "cover.html" . }}
-<section class="section">
-  <div class="container">
-      {{- with .Content -}}
-        <div class="content">
-          {{ . }}
-        </div>
-      {{- end -}}
-  </div>
-</section>
+{{- with .Content -}}
+    {{ . }}
+{{- end -}}
 {{ end }}

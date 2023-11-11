@@ -18,3 +18,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/js/splide.min.js" integrity="sha256-qtSu/7zFd1zx2GaGN7yAuWyIXuxC7IVrfSpncRDxUII=" crossorigin="anonymous"></script>
 {{- $splideJs := resources.Get "js/splide.init.js" | js.Build (dict "minify" hugo.IsProduction) | fingerprint -}}
 <script src="{{ $splideJs.RelPermalink }}" integrity="{{ $splideJs.Data.Integrity }}"></script>
+
+{{ if .Page.Store.Get "hasMathjax" }}
+<!-- mathjax -->
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$$', '$$']],
+      displayMath: [['$$$', '$$$']],
+      tags: 'ams'
+    },
+    svg: {
+        fontCache: 'global'
+    }
+  };
+</script>
+{{ end }}
