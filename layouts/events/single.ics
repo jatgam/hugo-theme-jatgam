@@ -57,7 +57,7 @@ TZNAME:EST
 END:STANDARD
 END:VTIMEZONE
 {{- $location := partial "location.html" . }}
-{{- $startDate := default .Date .Params.startDateTime }}
+{{- $startDate := .Date }}
 BEGIN:VEVENT
 SUMMARY:{{.Title}}
 DESCRIPTION:{{.Params.summary}}

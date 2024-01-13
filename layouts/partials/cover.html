@@ -2,19 +2,29 @@
 {{- $autoCover := default $.Site.Params.autoCover false }}
 {{ $hideCover := .Params.hideCover | default false }}
 
+{{ $showByline := and (in .Site.Params.mainSections .Type) (or (eq .IsSection false) (and (eq .IsSection true) (eq .Params.isMultipage true))) }}
+
 {{ if (not $hideCover) }}
   {{- if index .Params "cover" -}}
+    {{ $imgResource := false }}
     {{- if .Resources.GetMatch .Params.Cover }}
       {{ with .Resources.GetMatch .Params.Cover }}
-        {{ if gt .Width 1440 }}
-          {{ $cover = (.Resize "1440x jpeg q100").RelPermalink }}
-        {{ else }}
-          {{- $cover = .RelPermalink -}}
-        {{ end }}
+        {{ $imgResource = . }}
+      {{ end }}
+    {{- else if resources.GetMatch .Params.Cover -}}
+      {{ with resources.GetMatch .Params.Cover }}
+        {{ $imgResource = . }}
       {{ end }}
     {{- else -}}
       {{- $cover = absURL .Params.Cover -}}
     {{- end -}}
+    {{ with $imgResource }}
+      {{ if gt .Width 1440 }}
+        {{ $cover = (.Resize "1440x jpeg q100").RelPermalink }}
+      {{ else }}
+        {{- $cover = .RelPermalink -}}
+      {{ end }}
+    {{ end }}
   {{- else if $.Site.Params.AutoCover -}}
     {{- if (not .Params.Cover) -}}
       {{- if .Resources.GetMatch "cover.*" -}}
@@ -24,14 +34,14 @@
   {{- end -}}
 {{ end }}
 
-{{ if $cover }}
+{{ if true }}
 <section class="section py-2"><div class="container">{{ partial "breadcrumb.html" . }}</div></section>
 {{ end }}
 <div class="hero {{ if $cover }}is-halfheight has-background{{ else }}has-background-primary-light{{ end }}">
     {{ if $cover }}
     <img src="{{ $cover }}" class="hero-background" style="filter: brightness({{ .Params.Brightness | default "70%" }});" alt="{{ .Title | plainify | default " " }}" title="{{ .Params.CoverCredit |plainify|default "Cover Image" }}" />
     {{ end }}
-    {{ if (not $cover) }}
+    {{ if (not true) }}
     <div class="hero-head has-padding">
       <div class="container">{{ partial "breadcrumb.html" . }}</div>
     </div>
@@ -41,12 +51,12 @@
             <h3 class="title has-text-weight-bold is-family-title has-letter-spacing {{ if $cover }}has-text-white has-text-centered is-2{{ else }}is-3{{ end }}">{{ .Title }}</h3>
         </div>
     </div>
-    {{ if (not $cover) }}
+    {{ if and (not $cover) $showByline }}
     <div class="hero-foot has-padding">
       <div class="container has-text-right is-size-7">{{ partial "byLine.html" . }}</div>
     </div>
     {{ end }}
 </div>
-{{ if $cover }}
+{{ if and $cover $showByline }}
 <section class="section py-2"><div class="container has-text-right is-size-7">{{ partial "byLine.html" . }}</div></section>
 {{ end }}

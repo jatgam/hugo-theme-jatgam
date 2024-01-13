@@ -3,7 +3,7 @@
     {{ if $index }}, {{ end }}
     {
         "title": "{{ .Title }}",
-        "start": "{{ (time (default .Date .Params.startDateTime)).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
+        "start": "{{ (time .Date).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
         "end": "{{ (time .Params.EndDateTime).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
         "allDay": {{ .Params.allday }},
         "url": "{{ .Permalink | absURL }}"

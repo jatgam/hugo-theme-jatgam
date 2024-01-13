@@ -3,8 +3,8 @@
 {{ $events := where .Site.RegularPages "Type" "events" }}
 
 {{ if gt (len $events) 0 }}
-{{ range where $events "Params.startDateTime" "==" nil }}
-    {{ errorf (printf `carousel: missing startDateTime at %s` .Title) }}
+{{ range where $events "Date" "==" nil }}
+    {{ errorf (printf `carousel: missing Date at %s` .Title) }}
 {{ end }}
 {{ $hiddenEvents := where (where $events "Params.hideFromCarousel" "!=" nil) "Params.hideFromCarousel" true }}
 {{ $events = $events | complement $hiddenEvents }}
@@ -14,11 +14,11 @@
         <div class="splide" aria-label="{{ .Site.Params.EventsCarouselHomepage.label }}" data-splide='{"type":"loop","perPage":1,"autoplay":{{ .Site.Params.EventsCarouselHomepage.auto_play }},"interval":{{ .Site.Params.EventsCarouselHomepage.slide_speed }}}'>
             <div class="splide__track">
                 <ul class="splide__list">
-                    {{ $events = $events.ByParam "StartDateTime" }}
+                    {{ $events = $events.ByDate }}
                     {{ if gt (len $events) 5 }}
                         {{ $upcomingEvents := slice }}
                         {{ range $events }}
-                            {{ if (time (default .Date .Params.startDateTime)).After now }}
+                            {{ if (time .Date).After now }}
                                 {{ $upcomingEvents = $upcomingEvents | append . }}
                             {{ end }}
                         {{ end }}
@@ -26,7 +26,7 @@
                             {{ $priorEvents := slice }}
                             {{ $priorPad := sub 5 (len $upcomingEvents) }}
                             {{ range $events }}
-                                {{ if (time (default .Date .Params.startDateTime)).Before now }}
+                                {{ if (time .Date).Before now }}
                                     {{ $priorEvents = $priorEvents | append . }}
                                 {{ end }}
                             {{ end }}
@@ -78,7 +78,7 @@
                                         <div class="column is-half has-text-centered is-flex is-flex-direction-column is-justify-content-center carousel-description-column">
                                             <div>
                                                 <h1 class="title is-size-2-tablet is-size-3-mobile has-text-weight-bold is-family-title">{{ .Title }}</h1>
-                                                <h2 class="subtitle is-size-4-tablet is-size-5-mobile has-text-weight-bold is-family-title">{{ (time (default .Date .Params.startDateTime)).Format "Monday, January 2, 2006 @ 3:04PM MST" }}</h2>
+                                                <h2 class="subtitle is-size-4-tablet is-size-5-mobile has-text-weight-bold is-family-title">{{ (time .Date).Format "Monday, January 2, 2006 @ 3:04PM MST" }}</h2>
                                             </div>
                                             <div class="is-size-5-tablet is-size-6-mobile content carousel-description has-text-weight-light">{{ (.Description | safeHTML) | default .Summary }}</div>
                                             <div class="has-text-centered"><a href="{{ .RelPermalink }}" class="button is-primary is-light is-responsive">Read More</a></div>

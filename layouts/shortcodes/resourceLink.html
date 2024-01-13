@@ -1,10 +1,21 @@
 {{ $resource := .Page.Resources.GetMatch (.Get "resource") }}
+{{ $isParentResource := false }}
+{{ with $resource }}
+{{ else }}
+    {{ $resource = .Page.Parent.Resources.GetMatch (.Get "resource") }}
+    {{ $isParentResource = true }}
+{{ end }}
 {{ $showSize := .Get "showSize" | default false }}
 {{ $showIcon := .Get "showIcon" | default true}}
 
 {{ with $resource }}
     {{ $icon := $resource.Params.icon | default "download" }}
-    {{ $resourceFile := os.Stat (printf "content/%s/" (path.Join (path.Dir $.Page.File.Path) $resource)) }}
+    {{ $resourceFile := false }}
+    {{ if (not $isParentResource) }}
+        {{ $resourceFile = os.Stat (printf "content/%s/" (path.Join (path.Dir $.Page.File.Path) $resource)) }}
+    {{ else }}
+        {{ $resourceFile = os.Stat (printf "content/%s/" (path.Join (path.Dir $.Page.Parent.File.Path) $resource)) }}
+    {{ end }}
     {{ $size := 0}}
     {{ $unit := ""}}
     {{ with $resourceFile}}

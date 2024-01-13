@@ -32,6 +32,9 @@
 {{- with resources.Get "img/icons/favicon-16x16.png" -}}
 <link rel="shortcut icon" type="image/png" sizes="16x16" href="{{ .RelPermalink }}">
 {{- end -}}
+{{- with resources.Get "img/icons/site.webmanifest" -}}
+<link rel="manifest" href="{{ .RelPermalink }}">
+{{- end -}}
 
 <!-- OG data -->
 <meta property="og:locale" content="{{ $.Site.Language.Lang }}" />

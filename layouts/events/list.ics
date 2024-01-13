@@ -58,7 +58,7 @@ END:STANDARD
 END:VTIMEZONE
 {{- range (where .Data.Pages "Type" "events" ) }}
 {{- $location := partial "location.html" . }}
-{{- $startDate := default .Date .Params.startDateTime }}
+{{- $startDate := .Date }}
 BEGIN:VEVENT
 SUMMARY:{{.Title}}
 DESCRIPTION:{{ replace (.Summary | plainify) "\n" "\\n" }}

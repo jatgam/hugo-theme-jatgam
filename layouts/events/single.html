@@ -19,16 +19,16 @@
                 <div class="card event-card">
                     <div class="card-content is-flex is-flex-direction-row">
                         <div class="event-date-icon">
-                            <span class="event-date-icon-month"><abbr title="{{ dateFormat "January" (default .Date .Params.startDateTime) }}">{{ dateFormat "Jan" (default .Date .Params.startDateTime) }}</abbr></span>
-                            <span class="event-date-icon-day">{{ dateFormat "02" (default .Date .Params.startDateTime) }}</span>
-                            <span class="event-date-icon-year">{{ dateFormat "2006" (default .Date .Params.startDateTime) }}</span>
+                            <span class="event-date-icon-month"><abbr title="{{ dateFormat "January" .Date }}">{{ dateFormat "Jan" .Date }}</abbr></span>
+                            <span class="event-date-icon-day">{{ dateFormat "02" .Date }}</span>
+                            <span class="event-date-icon-year">{{ dateFormat "2006" .Date }}</span>
                         </div>
                         <div class="event-details">
                             <div class="event-time">
                                 <div class="is-align-items-center is-flex">
                                     <span class="icon is-medium"><i class='ri-time-line ri-2x'></i></span>
                                     <div>
-                                        {{ dateFormat "3:04PM" (default .Date .Params.startDateTime) }} to {{ dateFormat "3:04PM" .Params.endDateTime }} {{ dateFormat "MST" .Params.endDateTime }}
+                                        {{ dateFormat "3:04PM" .Date }} to {{ dateFormat "3:04PM" .Params.endDateTime }} {{ dateFormat "MST" .Params.endDateTime }}
                                     </div>
                                 </div>
                             </div>
@@ -93,9 +93,9 @@
         name: {{ .Title }},
         description: {{ .Summary }},
         location: "{{with $location.page }}{{ .Params.name }}, {{ .Params.address }}{{else}}{{ $location.name }}{{end}}",
-        startDate: "{{ dateFormat "2006-01-02" (default .Date .Params.startDateTime) }}",
+        startDate: "{{ dateFormat "2006-01-02" .Date }}",
         {{- if (not .Params.allday) }}
-        startTime: "{{ dateFormat "15:04" (default .Date .Params.startDateTime) }}",
+        startTime: "{{ dateFormat "15:04" .Date }}",
         {{- with .Params.endDateTime }}
         endDate: "{{ dateFormat "2006-01-02" . }}",
         endTime: "{{ dateFormat "15:04" . }}",

@@ -1,0 +1,24 @@
+{{ $imgSrc := .Get "src" }}
+{{ $width := .Get "width" }}
+{{ $image := false}}
+
+{{ $image = $.Page.Resources.GetMatch $imgSrc }}
+{{ with $image }}
+{{ else }}
+    {{ $image = $.Page.Parent.Resources.GetMatch $imgSrc }}
+{{ end }}
+{{ with $image }}
+{{ else }}
+    {{ $image = resources.GetMatch $imgSrc }}
+{{ end }}
+
+{{ $permalink := "" }}
+{{ with $image }}
+    {{ if lt $width .Width }}
+        {{ $permalink = (.Resize (printf "%dx q100" $width)).RelPermalink}}
+    {{ else }}
+        {{ $permalink = .RelPermalink }}
+    {{ end }}
+{{ end }}
+
+{{ $permalink }}
