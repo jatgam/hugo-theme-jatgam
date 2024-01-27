@@ -1,8 +1,3 @@
 {{ $date := .Date.Format (default "2006-01-02" ($.Param "dateFormat")) }}
 {{ $lastmod := .Lastmod.Format (default "2006-01-02" ($.Param "dateFormat")) }}
-{{- partial "author" . -}} <span class="icon-text">
-    <span class="icon">
-        <i class='ri-calendar-2-fill' style='color: #000000;'></i>
-    </span>
-    <span>Published on {{ $date }}{{ if ne $lastmod $date }}, Updated on {{ $lastmod }}{{ end }}</span>
-</span>
+{{- partial "author" . -}} <span class="icon-text"><span class="icon"><i class='ri-calendar-2-fill' style='color: #000000;'></i></span><span>Published on {{ $date }}{{ if ne $lastmod $date }}, Updated on {{ $lastmod }}{{ end }}</span></span>

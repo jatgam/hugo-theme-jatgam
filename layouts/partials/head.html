@@ -1,4 +1,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
+{{ if or .Site.IsServer (not hugo.IsProduction) }}
+<meta name='robots' content='noindex,follow' />
+{{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{{ if .IsHome }}{{ $.Site.Params.defaultDescription }}{{ else if .Description}}{{ .Description | plainify }}{{ else }}{{ .Summary | plainify }}{{ end }}" />
 <meta name="keywords" content="{{ with .Params.Keywords }}{{ delimit . ", " }}{{ else }}{{ with $.Site.Params.defaultKeywords }}{{ delimit . ", " }}{{ end }}{{ end }}" />
@@ -24,7 +27,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="{{ .RelPermalink }}">
 {{- end -}}
 {{- with resources.Get "img/icons/favicon.ico" -}}
-<link rel="shortcut icon" href="{{ .RelPermalink }}">
+<link rel="shortcut icon" href="{{ .RelPermalink }}" sizes="16x16 32x32 48x48">
 {{- end -}}
 {{- with resources.Get "img/icons/favicon-32x32.png" -}}
 <link rel="shortcut icon" type="image/png" sizes="32x32" href="{{ .RelPermalink }}">
@@ -43,7 +46,7 @@
 <meta property="og:description" content="{{ if .IsHome }}{{ $.Site.Params.defaultDescription }}{{ else if .Description}}{{ .Description | plainify }}{{ else }}{{ .Summary | plainify }}{{ end }}" />
 <meta property="og:url" content="{{ .Permalink }}" />
 <meta property="og:site_name" content="{{ $.Site.Title }}" />
-{{ if and (not .IsHome) (isset .Params "cover") }}
+{{ if and (not .IsHome) (and (isset .Params "cover") (and (ne .Params.Cover "") (ne .Params.Cover nil)) ) }}
   <meta property="og:image" content="{{ .Param "cover" | absURL }}">
 {{ else }}
   {{- with resources.Get "img/icons/siteImage.png" -}}

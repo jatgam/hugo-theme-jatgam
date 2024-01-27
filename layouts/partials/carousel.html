@@ -68,7 +68,7 @@
                                 {{ if gt $buffer.Width 1440 }}
                                     {{ $cover = ($buffer.Resize "1440x jpeg q100").RelPermalink }}
                                 {{ else }}
-                                    {{- $cover = .RelPermalink -}}
+                                    {{- $cover = $buffer.RelPermalink -}}
                                 {{ end }}
                             {{ end }}
                         {{- end -}}

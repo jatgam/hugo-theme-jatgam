@@ -1,24 +1,39 @@
-{{ $imgSrc := .Get "src" }}
-{{ $width := .Get "width" }}
-{{ $image := false}}
+{{- $imgSrc := .Get "src" -}}
+{{- $width := .Get "width" -}}
+{{- $ratioWidth := (.Get "ratioWidth") | default false -}}
+{{- $ratioHeight := (.Get "ratioHeight") | default false -}}
+{{- $image := false -}}
 
-{{ $image = $.Page.Resources.GetMatch $imgSrc }}
-{{ with $image }}
-{{ else }}
-    {{ $image = $.Page.Parent.Resources.GetMatch $imgSrc }}
-{{ end }}
-{{ with $image }}
-{{ else }}
-    {{ $image = resources.GetMatch $imgSrc }}
-{{ end }}
+{{- $image = $.Page.Resources.GetMatch $imgSrc -}}
+{{- with $image -}}
+{{- else -}}
+    {{- $image = $.Page.Parent.Resources.GetMatch $imgSrc -}}
+{{- end -}}
+{{- with $image }}
+{{- else -}}
+    {{- $image = resources.GetMatch $imgSrc -}}
+{{- end -}}
 
-{{ $permalink := "" }}
-{{ with $image }}
-    {{ if lt $width .Width }}
-        {{ $permalink = (.Resize (printf "%dx q100" $width)).RelPermalink}}
-    {{ else }}
-        {{ $permalink = .RelPermalink }}
-    {{ end }}
-{{ end }}
+{{- $permalink := "" -}}
+{{- with $image -}}
+    {{- $buffer := $image -}}
+    {{- if and $ratioWidth $ratioHeight -}}
+        {{- $currentRatio := div (float $buffer.Width) (float $buffer.Height) -}}
+        {{- $wantedRatio := div (float $ratioWidth) (float $ratioHeight) -}}
+        {{- $newWidth := $buffer.Width -}}
+        {{- $newHeight := $buffer.Height -}}
+        {{- if (gt $currentRatio $wantedRatio) -}}
+            {{- $newWidth = int (mul $wantedRatio $buffer.Height) -}}
+        {{- else -}}
+            {{- $newHeight = int (div $buffer.Width $wantedRatio) -}}
+        {{- end -}}
+        {{- $buffer = $buffer.Crop (printf "%dx%d center jpeg q100" $newWidth $newHeight) -}}
+    {{- end -}}
+    {{- if lt $width $buffer.Width -}}
+        {{- $permalink = ($buffer.Resize (printf "%dx q100" $width)).RelPermalink -}}
+    {{- else -}}
+        {{- $permalink = $buffer.RelPermalink -}}
+    {{- end -}}
+{{- end -}}
 
-{{ $permalink }}
+{{- $permalink -}}

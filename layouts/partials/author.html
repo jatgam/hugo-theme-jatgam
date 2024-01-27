@@ -3,18 +3,8 @@
     {{ $name := . }}
     {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
     {{- with $.Site.GetPage $path -}}
-    <span class="icon-text">
-        <span class="icon">
-            <i class='ri-user-fill' style='color: #000000;'></i>
-        </span>
-        <span>{{ if $.Site.Params.showAuthorLinks | default false }}<a href="{{ .RelPermalink }}">{{ $name }}</a>{{ else }}{{ $name }}{{ end }}</span>
-    </span>
+    <span class="icon-text"><span class="icon"><i class='ri-user-fill' style='color: #000000;'></i></span><span>{{ if $.Site.Params.showAuthorLinks | default false }}<a href="{{ .RelPermalink }}">{{ $name }}</a>{{ else }}{{ $name }}{{ end }}</span></span>
     {{- else -}}
-    <span class="icon-text">
-        <span class="icon">
-            <i class='ri-user-fill' style='color: #000000;'></i>
-        </span>
-        <span>{{ $name }}</span>
-    </span>
+    <span class="icon-text"><span class="icon"><i class='ri-user-fill' style='color: #000000;'></i></span><span>{{ $name }}</span></span>
     {{- end -}}
 {{- end -}}
