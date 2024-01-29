@@ -24,7 +24,7 @@ function map () {
       gmapsUrl = gmapsUrl + `&query_place_id=${encodeURIComponent(gPlaceId)}`
     }
     
-    var gLink = `<a href ="${gmapsUrl}">${address}</a>`
+    var gLink = `<a target="_blank" href ="${gmapsUrl}">${address}</a>`
     var marker = L.marker([lat, lng], {title: name ? name : "Location Pin"}).addTo(map).bindPopup(address ? gLink : 'Address unknown');
 
     if (typeof mapPolygon !== "undefined") {
