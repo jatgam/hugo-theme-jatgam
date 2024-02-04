@@ -1,8 +1,18 @@
+{{ define "extrahead" }}
+    {{ $pageContext := . }}
+    {{- $location := partial "location.html" . }}
+    {{ $.Scratch.Set "location" $location }}
+    {{ with .Params.eventType }}
+    {{ if eq . "physical" }}
+        {{ partial "eventStructuredData.html" $pageContext }}
+    {{ end }}
+    {{ end }}
+{{ end }}
+
 {{ define "main" }}
 {{- partial "cover.html" . }}
-{{- $location := partial "location.html" . }}
+{{- $location := $.Scratch.Get "location" }}
 {{ $locationModalId := $location.name | sha256 }}
-{{ $.Scratch.Set "location" $location }}
 {{ $addToCalendarId := delimit (shuffle (split (sha256 .Date) "" )) "" }}
 {{ $.Scratch.Set "addToCalendarId" $addToCalendarId }}
 <section class="section">
@@ -34,7 +44,15 @@
                             </div>
                             <div class="event-location">
                                 <div class="is-align-items-center is-flex">
+                                    {{ with .Params.eventType }}
+                                        {{ if eq . "online" }}
+                                        <span class="icon is-medium"><i class='ri-global-line ri-2x'></i></span>
+                                        {{ else }}
+                                        <span class="icon is-medium"><i class='ri-map-pin-2-line ri-2x'></i></span>
+                                        {{ end }}
+                                    {{ else }}
                                     <span class="icon is-medium"><i class='ri-map-pin-2-line ri-2x'></i></span>
+                                    {{ end }}
                                     <div>
                                         <p class="title is-5">{{ $location.name }}</p>
                                         {{ with $location.page }}<p class="subtitle is-6">{{ .Params.address }}</p>{{ end }}

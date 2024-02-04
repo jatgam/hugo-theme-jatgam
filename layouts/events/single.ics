@@ -67,7 +67,7 @@ STATUS:CONFIRMED
 DTSTAMP:{{ dateFormat "20060102T150405Z" $startDate }}
 DTSTART;TZID=America/New_York:{{ dateFormat "20060102T150405" $startDate }}
 {{ with .Params.endDateTime }}DTEND;TZID=America/New_York:{{dateFormat "20060102T150405" . }}{{ end }}
-LOCATION:{{with $location.page }}{{ .Params.name }}, {{ .Params.address }}{{else}}{{ $location.name }}{{end}}
+LOCATION:{{with $location.page }}{{ .Params.name }}{{with .Params.address }}, {{.}}{{ end }}{{else}}{{ $location.name }}{{end}}
 URL:{{.Permalink}}
 END:VEVENT
 END:VCALENDAR

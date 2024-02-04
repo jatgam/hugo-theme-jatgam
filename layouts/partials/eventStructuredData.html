@@ -1,0 +1,35 @@
+{{- $location := $.Scratch.Get "location" }}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "{{ .Title }}",
+    "startDate": "{{ (time .Date).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
+    "endDate": "{{ (time .Params.EndDateTime).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": "{{ $location.name }}"{{ with $location.page }},
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ .Params.street }}",
+        "addressLocality": "{{ .Params.town }}",
+        "postalCode": "{{ .Params.postalcode }}",
+        "addressRegion": "{{ .Params.state }}",
+        "addressCountry": "US"
+      }{{ end }}
+    },
+    {{- with .Resources.GetMatch .Params.Cover }}
+    "image": [
+      "{{ .Permalink }}"
+    ],
+    {{- end }}
+    "description": "{{ .Summary | plainify }}",
+    "organizer": {
+      "@type": "Organization",
+      "name": "{{ (default "Jatgam Theme Organizer" .Site.Params.Events.defaultOrganizer) }}",
+      "url": {{ .Site.BaseURL }}
+    }
+  }
+</script>
