@@ -76,6 +76,7 @@
   <link href="{{ .RelPermalink }}" rel="alternate" type="application/json" title="{{ $.Site.Title }}" />
 {{ end }}
 
+{{ if .IsHome }}
 <!-- Org Structured Data -->
 <script type="application/ld+json">
   {
@@ -90,6 +91,7 @@
     "foundingDate": "{{ .Site.Params.foundingDate }}"
   }
 </script>
+{{ end }}
 
 <!-- Extended head section-->
 {{ partial "extended_head.html" . }}
