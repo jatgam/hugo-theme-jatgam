@@ -12,6 +12,9 @@ endDateTime: {{ dateFormat "2006-01-02T15:04:05Z07:00" (now.AddDate 0 0 +1) }} #
 # organizers: # a list of authors to show contact information
 
 eventType: physical # online
+# cancelled: true
+# rescheduled: true
+# previousStartDate: # set to the original date if rescheduling
 # Data for Front Page Events Carousel
 location:
 description:

@@ -60,7 +60,7 @@ END:VTIMEZONE
 {{- $location := partial "location.html" . }}
 {{- $startDate := .Date }}
 BEGIN:VEVENT
-SUMMARY:{{.Title}}
+SUMMARY:{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{.Title}}
 DESCRIPTION:{{ replace (.Summary | plainify) "\n" "\\n" }}
 UID:{{ dateFormat "20060102T150405" .Date }}@{{ (default "jatgam-theme-calendar" .Site.Params.Events.calendarName | urlize) }}
 SEQUENCE:0

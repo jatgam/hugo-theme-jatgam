@@ -60,7 +60,7 @@ END:VTIMEZONE
 {{- $startDate := .Date }}
 BEGIN:VEVENT
 SUMMARY:{{.Title}}
-DESCRIPTION:{{.Params.summary}}
+DESCRIPTION:{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{.Params.summary}}
 UID:{{ dateFormat "20060102T150405" .Date }}@{{ (default "jatgam-theme-calendar" .Site.Params.Events.calendarName | urlize) }}
 SEQUENCE:0
 STATUS:CONFIRMED

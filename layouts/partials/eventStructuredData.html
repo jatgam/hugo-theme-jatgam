@@ -6,8 +6,9 @@
     "name": "{{ .Title }}",
     "startDate": "{{ (time .Date).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
     "endDate": "{{ (time .Params.EndDateTime).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
+    {{ with .Params.PreviousStartDate }}"previousStartDate": {{ (time .).UTC.Format "2006-01-02T15:04:05Z07:00" }},{{ end }}
     "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-    "eventStatus": "https://schema.org/EventScheduled",
+    "eventStatus": {{ with .Params.Cancelled }}"https://schema.org/EventCancelled"{{ else }}{{ with .Params.Rescheduled }}"https://schema.org/EventRescheduled"{{ else }}"https://schema.org/EventScheduled"{{ end }}{{ end }},
     "location": {
       "@type": "Place",
       "name": "{{ $location.name }}"{{ with $location.page }},
