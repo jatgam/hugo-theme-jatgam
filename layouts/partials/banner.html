@@ -1,5 +1,19 @@
 <section class="hero is-info is-{{ $.Size }} {{ with $.Image }}has-background{{ end }}">
-    {{ with $.Image }}<img class="hero-background" src="{{ . }}">{{ end }}
+    {{ $bg := false }}
+    {{ with $bgImgResource := resources.GetMatch $.Image }}
+        {{ if gt $bgImgResource.Width 1440 }}
+            {{ $bg = ($bgImgResource.Resize "1440x jpeg q85").RelPermalink }}
+        {{ else }}
+            {{ $bg = ($bgImgResource.Resize (printf "%dx jpeg q85" $bgImgResource.Width)).RelPermalink }}
+        {{ end }}
+    {{ else }}
+        {{ with $.Image }}
+            {{ $bg = . }}
+        {{ end }}
+    {{ end }}
+    {{ with $bg }}
+    <img class="hero-background" src="{{ . }}">
+    {{ end }}
     <div class="hero-body">
         <div class="container">
             <div class="has-text-centered"><h1 class="is-size-6-mobile is-size-4-tablet is-size-2-desktop has-text-weight-bold is-family-monospace has-text-white has-background-primary">{{ $.Text }}</h1></div>

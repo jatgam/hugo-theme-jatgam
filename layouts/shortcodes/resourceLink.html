@@ -1,20 +1,33 @@
-{{ $resource := .Page.Resources.GetMatch (.Get "resource") }}
+{{ $setResource := .Get "resource" }}
+{{ $resource := .Page.Resources.GetMatch $setResource }}
 {{ $isParentResource := false }}
+{{ $isGlobalResource := false }}
 {{ with $resource }}
 {{ else }}
-    {{ $resource = .Page.Parent.Resources.GetMatch (.Get "resource") }}
-    {{ $isParentResource = true }}
+    {{ with .Page.Parent }}
+        {{ $resource = .Resources.GetMatch $setResource }}
+        {{ $isParentResource = true }}
+    {{ end }}
 {{ end }}
+
+{{ with $resource }}
+{{ else }}
+    {{ $resource = resources.GetMatch $setResource }}
+    {{ $isGlobalResource = true }}
+{{ end }}
+
 {{ $showSize := .Get "showSize" | default false }}
 {{ $showIcon := .Get "showIcon" | default true}}
 
 {{ with $resource }}
     {{ $icon := $resource.Params.icon | default "download" }}
     {{ $resourceFile := false }}
-    {{ if (not $isParentResource) }}
+    {{ if (and (not $isParentResource) (not $isGlobalResource)) }}
         {{ $resourceFile = os.Stat (printf "content/%s/" (path.Join (path.Dir $.Page.File.Path) $resource)) }}
-    {{ else }}
+    {{ else if $isParentResource }}
         {{ $resourceFile = os.Stat (printf "content/%s/" (path.Join (path.Dir $.Page.Parent.File.Path) $resource)) }}
+    {{ else if $isGlobalResource }}
+        {{ $resourceFile = os.Stat (printf "assets/%s/" $resource) }}
     {{ end }}
     {{ $size := 0}}
     {{ $unit := ""}}
@@ -36,4 +49,6 @@
     {{ else }}
 <a href="{{ $resource.RelPermalink }}">{{ $resource.Title }}</a>{{ if $showSize }}{{with $resourceFile}}&nbsp;- {{$size}} {{$unit}}{{end}}{{ end }}
     {{ end }}
+{{ else }}
+    {{ warnf (printf `resourceLink: unable to find resource %s in %s` $setResource (path.Dir $.Page.File.Path)) }}
 {{ end }}

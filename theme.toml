@@ -5,7 +5,7 @@ description = "A Bulma Based Theme for Hugo"
 homepage = "https://github.com/jatgam/hugo-theme-jatgam"
 tags = ["responsive"]
 features = ["blog", "shortcode", "syntax highlighting"]
-min_version = 0.111
+min_version = 0.124
 
 [author]
   name = "Jatgam"
