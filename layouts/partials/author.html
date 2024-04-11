@@ -1,10 +1,11 @@
 {{ $authors := .Params.authors }}
 {{- range $authors -}}
     {{ $name := . }}
-    {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
+    {{ $path := printf "/%s/%s" "authors" $name }}
     {{- with $.Site.GetPage $path -}}
     <span class="icon-text"><span class="icon"><i class='ri-user-fill' style='color: #000000;'></i></span><span>{{ if $.Site.Params.showAuthorLinks | default false }}<a href="{{ .RelPermalink }}">{{ $name }}</a>{{ else }}{{ $name }}{{ end }}</span></span>
     {{- else -}}
+    {{ warnf (printf `author: unable to find author %s` $name) }}
     <span class="icon-text"><span class="icon"><i class='ri-user-fill' style='color: #000000;'></i></span><span>{{ $name }}</span></span>
     {{- end -}}
 {{- end -}}

@@ -1,5 +1,5 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-{{ if or .Site.IsServer (not hugo.IsProduction) }}
+{{ if or hugo.IsServer (not hugo.IsProduction) }}
 <meta name='robots' content='noindex, nofollow' />
 {{ end }}
 <meta name="viewport" content="width=device-width, initial-scale=1">

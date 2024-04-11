@@ -9,7 +9,7 @@
     {{- range . -}}
         {{ $name := . }}
         {{ $avatar := false }}
-        {{ $path := printf "/%s/%s" "authors" ($name | urlize) }}
+        {{ $path := printf "/%s/%s" "authors" $name }}
         {{ with site.GetPage $path }}
             {{- if index .Params "avatar" -}}
                 {{ if .Resources.GetMatch .Params.avatar }}
