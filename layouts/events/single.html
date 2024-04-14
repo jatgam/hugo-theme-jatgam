@@ -23,12 +23,13 @@
                 <article class="message is-danger">
                     <div class="message-body content">This event has been cancelled.</div>
                 </article>
-                {{ end }}
-                {{ $previousStartDate := .Params.PreviousStartDate }}
-                {{ with .Params.Rescheduled }}
-                <article class="message is-warning">
-                    <div class="message-body content">This event has been rescheduled from its original date and time{{ with $previousStartDate }}: {{ dateFormat "January 02 2006, 3:04PM MST" . }}{{else}}.{{end}}</div>
-                </article>
+                {{ else }}
+                    {{ $previousStartDate := .Params.PreviousStartDate }}
+                    {{ with .Params.Rescheduled }}
+                    <article class="message is-warning">
+                        <div class="message-body content">This event has been rescheduled from its original date and time{{ with $previousStartDate }}: {{ dateFormat "January 02 2006, 3:04PM MST" . }}{{else}}.{{end}}</div>
+                    </article>
+                    {{ end }}
                 {{ end }}
                 {{ with .Content }}
                 <div class="content">

@@ -2,6 +2,7 @@
 {{- $width := .Get "width" -}}
 {{- $ratioWidth := (.Get "ratioWidth") | default false -}}
 {{- $ratioHeight := (.Get "ratioHeight") | default false -}}
+{{- $quality := (.Get "quality") | default 85 -}}
 {{- $image := false -}}
 
 {{- $image = $.Page.Resources.GetMatch $imgSrc -}}
@@ -30,9 +31,9 @@
         {{- $buffer = $buffer.Crop (printf "%dx%d center jpeg q100" $newWidth $newHeight) -}}
     {{- end -}}
     {{- if lt $width $buffer.Width -}}
-        {{- $permalink = ($buffer.Resize (printf "%dx q100" $width)).RelPermalink -}}
+        {{- $permalink = ($buffer.Resize (printf "%dx jpeg q%d" $width $quality)).RelPermalink -}}
     {{- else -}}
-        {{- $permalink = $buffer.RelPermalink -}}
+        {{- $permalink = ($buffer.Resize (printf "%dx jpeg q%d" $buffer.Width $quality)).RelPermalink -}}
     {{- end -}}
 {{- end -}}
 

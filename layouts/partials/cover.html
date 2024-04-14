@@ -20,7 +20,7 @@
     {{- end -}}
     {{ with $imgResource }}
       {{ if gt .Width 1440 }}
-        {{ $cover = (.Resize "1440x jpeg q100").RelPermalink }}
+        {{ $cover = (.Resize "1440x jpeg q90").RelPermalink }}
       {{ else }}
         {{- $cover = .RelPermalink -}}
       {{ end }}
