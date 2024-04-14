@@ -22,14 +22,14 @@
                         {{ $newHeight := 300 }}
                         {{ $newWidth := div (mul $newHeight .Width) .Height }}
                         {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
-                        {{ $buffer = $buffer.Crop "300x300 center jpeg q100" }}
+                        {{ $buffer = $buffer.Crop "300x300 center jpeg q90" }}
                         {{ $image = $buffer.Permalink }}
                     {{ else }}
                         {{ with resources.GetMatch $image }}
                             {{ $newHeight := 300 }}
                             {{ $newWidth := div (mul $newHeight .Width) .Height }}
                             {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
-                            {{ $buffer = $buffer.Crop "300x300 center jpeg q100" }}
+                            {{ $buffer = $buffer.Crop "300x300 center jpeg q90" }}
                             {{ $image = $buffer.Permalink }}
                         {{ end}}
                     {{ end }}

@@ -8,7 +8,7 @@
         {{ $imageResource := $.Page.Resources.GetMatch . }}
         {{ with $imageResource }}
             {{ $buffer := .Resize "75x q100" }}
-            {{ $buffer = $buffer.Crop "75x75 center jpeg q100" }}
+            {{ $buffer = $buffer.Crop "75x75 center jpeg q90" }}
 
             {{ if or (not (eq $buffer.Width 75)) (not (eq $buffer.Height 75)) }}
                 {{ with $whiteSq := resources.Get "img/75x75WhiteSq.png" }}

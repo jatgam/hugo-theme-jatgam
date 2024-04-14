@@ -20,7 +20,7 @@
                             {{ $newHeight := 300 }}
                             {{ $newWidth := div (mul $newHeight .Width) .Height }}
                             {{ $buffer := .Resize (printf "%dx q100" $newWidth) }}
-                            {{ $buffer = $buffer.Crop "400x300 center jpeg q100" }}
+                            {{ $buffer = $buffer.Crop "400x300 center jpeg q90" }}
                             {{ $image = $buffer.RelPermalink }}
                         {{- end -}}
                         <div class="card-image">
