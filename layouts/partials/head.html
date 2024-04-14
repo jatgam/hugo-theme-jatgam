@@ -8,7 +8,8 @@
 <link rel="canonical" href="{{ .Permalink }}" />
 
 <!-- Theme CSS -->
-{{ $style := resources.Get "/css/stylesheet.scss" | resources.ExecuteAsTemplate "css/style.main.scss" . | toCSS | minify | fingerprint }}
+{{ $opts := dict "transpiler" "dartsass" "targetPath" "css/style.css" }}
+{{ $style := resources.Get "/css/stylesheet.scss" | resources.ExecuteAsTemplate "css/style.main.scss" . | toCSS $opts | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink | relURL }}" integrity="{{ $style.Data.Integrity }}" />
 
 <!-- Splide Carousel -->

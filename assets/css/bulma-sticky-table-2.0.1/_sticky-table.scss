@@ -1,3 +1,4 @@
+@use "../bulma/sass/elements/table.scss";
 $bulma-sticky-table-zindex: 5 !default;
 
 @media screen {
@@ -19,7 +20,9 @@ $bulma-sticky-table-zindex: 5 !default;
         }
 
         &.is-bordered {
-            border: $table-cell-border;
+            border-color: table.$table-cell-border-color;
+            border-style: table.$table-cell-border-style;
+            border-width: table.$table-cell-border-width;
 
             td,
             th {
@@ -46,12 +49,12 @@ $bulma-sticky-table-zindex: 5 !default;
 
     .table.has-sticky-header {
         thead th {
-            @if $table-head-background-color ==
+            @if table.$table-head-background-color ==
                 "transparent" or
-                $table-head-background-color ==
+                table.$table-head-background-color ==
                 rgba(0, 0, 0, 0)
             {
-                background-color: $table-background-color;
+                background-color: table.$table-background-color;
             }
             position: sticky;
             top: 0;
@@ -61,7 +64,7 @@ $bulma-sticky-table-zindex: 5 !default;
 
     .navbar.is-fixed-top ~ * .table.has-sticky-header thead th,
     .navbar.is-fixed-top ~ .table.has-sticky-header thead th {
-        top: $navbar-height;
+        top: var(--bulma-navbar-height);
     }
 
     /*
@@ -70,12 +73,12 @@ $bulma-sticky-table-zindex: 5 !default;
 
     .table.has-sticky-footer {
         tfoot th {
-            @if $table-foot-background-color ==
+            @if table.$table-foot-background-color ==
                 "transparent" or
-                $table-foot-background-color ==
+                table.$table-foot-background-color ==
                 rgba(0, 0, 0, 0)
             {
-                background-color: $table-background-color;
+                background-color: table.$table-background-color;
             }
             position: sticky;
             bottom: 0;
@@ -85,7 +88,7 @@ $bulma-sticky-table-zindex: 5 !default;
 
     .navbar.is-fixed-bottom ~ * .table.has-sticky-footer tfoot th,
     .navbar.is-fixed-bottom ~ .table.has-sticky-footer tfoot th {
-        bottom: $navbar-height;
+        bottom: var(--bulma-navbar-height);
     }
 
     /*
@@ -95,12 +98,12 @@ $bulma-sticky-table-zindex: 5 !default;
     .table.has-sticky-column {
         tfoot th:first-child,
         thead th:first-child {
-            @if $table-head-background-color ==
+            @if table.$table-head-background-color ==
                 "transparent" or
-                $table-head-background-color ==
+                table.$table-head-background-color ==
                 rgba(0, 0, 0, 0)
             {
-                background-color: $table-background-color;
+                background-color: table.$table-background-color;
             }
             position: sticky;
             left: 0;
@@ -108,12 +111,12 @@ $bulma-sticky-table-zindex: 5 !default;
         }
 
         tbody th:first-child {
-            @if $table-body-background-color ==
+            @if table.$table-body-background-color ==
                 "transparent" or
-                $table-body-background-color ==
+                table.$table-body-background-color ==
                 rgba(0, 0, 0, 0)
             {
-                background-color: $table-background-color;
+                background-color: table.$table-background-color;
             }
             position: sticky;
             left: 0;
@@ -121,24 +124,24 @@ $bulma-sticky-table-zindex: 5 !default;
         }
 
         tbody tr.is-selected th:first-child {
-            background-color: $table-row-active-background-color;
+            background-color: table.$table-row-active-background-color;
         }
 
         &.is-hoverable {
             tbody tr:not(.is-selected):hover th:first-child {
-                background-color: $table-row-hover-background-color;
+                background-color: table.$table-row-hover-background-color;
             }
         }
 
         &.is-striped {
             tbody tr:not(.is-selected):nth-child(even) th:first-child {
-                background-color: $table-striped-row-even-background-color;
+                background-color: table.$table-striped-row-even-background-color;
             }
         }
 
         &.is-striped.is-hoverable {
             tbody tr:not(.is-selected):nth-child(even):hover th:first-child {
-                background-color: $table-striped-row-even-hover-background-color;
+                background-color: table.$table-striped-row-even-hover-background-color;
             }
         }
     }

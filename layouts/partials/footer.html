@@ -6,8 +6,8 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-9">
-                    <div class="tile is-ancestor">
-                        <div class="tile is-12 is-parent is-flex-wrap-wrap">
+                    <div class="fixed-grid has-auto-count">
+                        <div class="grid">
 
                             {{ $noMenu := slice }}
                             {{ range .Site.Menus.main.ByWeight }}
@@ -17,7 +17,7 @@
                                 {{ if $hasSections }}
                                     {{ range .Children.ByWeight }}
                                     {{ if .HasChildren }}
-                                    <div class="tile is-4 is-child">
+                                    <div class="cell">
                                         <nav class="jatgam__footer-nav">
                                             <dl>
                                                 <dt><h1 class="title is-6 is-uppercase">{{ .Name }}</h1></dt>
@@ -33,7 +33,7 @@
 
                                 
                                 {{ else }}
-                                    <div class="tile is-4 is-child">
+                                    <div class="cell">
                                         <nav class="jatgam__footer-nav">
                                             <dl>
                                                 <dt><h1 class="title is-6 is-uppercase">{{ .Name }}</h1></dt>
@@ -51,7 +51,7 @@
                             {{ end }}
 
                             {{ if (not (default false .Site.Params.Widgets.NavInFooter.showNonDropDownOnRight)) }}
-                            <div class="tile is-4 is-child">
+                            <div class="cell">
                                 <nav class="jatgam__footer-nav">
                                     <dl>
                                         <dt><h1 class="title is-6 is-uppercase">{{ .Site.Params.Widgets.NavInFooter.nonDropDownTitle }}</h1></dt>
@@ -64,6 +64,7 @@
                             {{ end }}
 
 
+                            
                         </div>
                     </div>
                 </div>
