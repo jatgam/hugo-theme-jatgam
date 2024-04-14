@@ -170,6 +170,34 @@ div.hero + section.section {
     }
 }
 
+.event-carousel {
+    .event-carousel-slide {
+        .carousel-description a {
+            color: darkred;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        &.event-is-cancelled {
+            .event-carousel-slide-title {
+                &::before {
+                    content: "CANCELLED - ";
+                }
+            }
+            .event-carousel-slide-date {
+                text-decoration: line-through;
+            }
+        }
+
+        &.event-is-rescheduled {
+            .event-carousel-slide-title {
+                &::before {
+                    content: "RESCHEDULED - ";
+                }
+            }
+        }
+    }
+}
+
 section#mission {
     background-image: url({{ (resources.Get "img/bg/light-grey-terrazzo.webp").RelPermalink }});
     background-blend-mode: multiply;
