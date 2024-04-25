@@ -1,3 +1,9 @@
+{{- $lastMod := 0 -}}
+{{- range (where .Data.Pages "Type" "events" ) }}
+    {{- if gt .Lastmod $lastMod }}
+        {{- $lastMod = .Lastmod }}
+    {{- end }}
+{{- end -}}
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//{{ (default "Jatgam Theme Calendar" .Site.Params.Events.calendarName) }}//EN
@@ -5,7 +11,7 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VTIMEZONE
 TZID:America/New_York
-LAST-MODIFIED:20050809T050000Z
+LAST-MODIFIED:{{ dateFormat "20060102T150405Z" $lastMod }}
 BEGIN:DAYLIGHT
 DTSTART:19670430T020000
 RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=-1SU;UNTIL=19730429T070000Z
@@ -62,7 +68,7 @@ END:VTIMEZONE
 BEGIN:VEVENT
 SUMMARY:{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{.Title}}
 DESCRIPTION:{{ replace (.Summary | plainify) "\n" "\\n" }}
-UID:{{ dateFormat "20060102T150405" .Date }}@{{ (default "jatgam-theme-calendar" .Site.Params.Events.calendarName | urlize) }}
+UID:{{with .Params.icsUID}}{{.}}{{else}}{{ dateFormat "20060102T150405" .Date }}{{end}}@{{ (default "jatgam-theme-calendar" .Site.Params.Events.calendarName | urlize) }}
 SEQUENCE:0
 STATUS:CONFIRMED
 DTSTAMP:{{ dateFormat "20060102T150405Z" $startDate }}

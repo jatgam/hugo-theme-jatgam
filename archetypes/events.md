@@ -9,6 +9,9 @@ allday: false
 date: {{ .Date }} # event start date
 endDateTime: {{ dateFormat "2006-01-02T15:04:05Z07:00" (now.AddDate 0 0 +1) }} # event end date
 
+# This should remain untouched, and is used for ical feeds
+icsUID: {{ printf "%.30s" (base64Encode (sha256 (printf "%s%s" .Date .Name))) }}
+
 # organizers: # a list of authors to show contact information
 
 eventType: physical # online
