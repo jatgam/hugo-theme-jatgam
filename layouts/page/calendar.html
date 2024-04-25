@@ -31,6 +31,8 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js" integrity="sha256-7PzqE1MyWa/IV5vZumk1CVO6OQbaJE4ns7vmxuUP/7g=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js" integrity="sha256-Y7WDI9UHToDgc46Sw1kOFkQSnKhwLjp3NnpfcJ0NMRE=" crossorigin="anonymous"></script>
 
+<script src="https://unpkg.com/@popperjs/core@2.11.8" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/tippy.js@6.3.7" integrity="sha384-AiTRpehQ7zqeua0Ypfa6Q4ki/ddhczZxrKtiQbTQUlJIhBkTeyoZP9/W/5ulFt29" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2.2.5/dist/atcb.js" integrity="sha256-6yWNI6TMEEhoxmwUvHkwXNts2Xnh/aOR1tOCOdqhH7M=" crossorigin="anonymous" async defer></script>
 
 <script>
@@ -60,6 +62,39 @@
                 center: "title",
                 right: "listYear dayGridMonth,timeGridWeek,timeGridDay",
             },
+            eventDidMount: function(info) {
+                // var tooltip = new Tooltip(info.el, {
+                //     title: info.event.extendedProps.description,
+                //     placement: 'top',
+                //     trigger: 'hover',
+                //     container: 'body'
+                // });
+                if (!info.view.type.startsWith("list")) {
+                    let content = `
+<div class="content has-text-centered">
+    <h6 class="is-6 title has-text-weight-light">${info.event.title}</h6>
+</div>`;
+                    tippy(info.el, {
+                        content: content,
+                        allowHTML: true,
+                        theme: "jatgam",
+                        followCursor: 'horizontal',
+                    });
+                }
+                
+            },
+            // eventContent: function(arg) {
+            //     let span = document.createElement('span')
+
+            //     if (arg.event.extendedProps.location) {
+            //         span.innerHTML = '<a href="' + arg.event.url + '">' + arg.event.title + '</a> @ ' +  arg.event.extendedProps.location;
+            //     } else {
+            //         span.innerHTML = '<a href="' + arg.event.url + '">' + arg.event.title + '</a>';
+            //     }
+
+            //     let arrayOfDomNodes = [ span ]
+            //     return { domNodes: arrayOfDomNodes }
+            // }
         });
         calendar.render();
     });

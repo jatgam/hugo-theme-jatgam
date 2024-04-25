@@ -2,11 +2,15 @@
     {{ range $index, $e := (where .Data.Pages "Type" "events" ) }}
     {{ if $index }}, {{ end }}
     {
-        "title": "{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{ .Title }}",
+        "title": "{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{ .Title }}{{ with .Params.Location }} @ {{.}}{{ end }}",
         "start": "{{ (time .Date).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
         "end": "{{ (time .Params.EndDateTime).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
         "allDay": {{ .Params.allday }},
-        "url": "{{ .Permalink | absURL }}"
+        "url": "{{ .Permalink | absURL }}",
+        "extendedProps": {
+            "location": "{{ .Params.Location }}",
+            "description": "{{ replace (.Summary | plainify) "\n" "\\n" }}"
+        }
     }
     {{ end }}
 ]
