@@ -69,7 +69,8 @@ BEGIN:VEVENT
 SUMMARY:{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{.Title}}
 DESCRIPTION:{{ replace (.Summary | plainify) "\n" "\\n" }}
 UID:{{with .Params.icsUID}}{{.}}{{else}}{{ dateFormat "20060102T150405" .Date }}{{end}}@{{ (default "jatgam-theme-calendar" .Site.Params.Events.calendarName | urlize) }}
-SEQUENCE:0
+LAST-MODIFIED:{{ dateFormat "20060102T150405Z" .Lastmod }}
+SEQUENCE:{{ default "0" .Params.icsUpdateCount }}
 STATUS:CONFIRMED
 DTSTAMP:{{ dateFormat "20060102T150405Z" $startDate }}
 DTSTART;TZID=America/New_York:{{ dateFormat "20060102T150405" $startDate }}
