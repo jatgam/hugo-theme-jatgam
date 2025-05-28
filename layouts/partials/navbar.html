@@ -99,8 +99,15 @@
     </div>
     <div class="navbar-end">
       <div class="is-flex is-justify-content-center" id="navbar-socials">
+        {{- range .Site.Menus.iconlinks.ByWeight -}}
+        <a href="{{ .URL }}" target="_blank" class="navbar-item" title="{{ .Name }}">
+          <span class="icon is-medium">
+            {{- .Pre | safeHTML -}}
+          </span>
+        </a>
+        {{- end -}}
         {{- range .Site.Menus.socialbar.ByWeight -}}
-        <a href="{{ .URL }}" target="_blank" class="navbar-item">
+        <a href="{{ .URL }}" target="_blank" class="navbar-item" title="{{ .Name }}">
           <span class="icon is-medium">
             {{- .Pre | safeHTML -}}
           </span>

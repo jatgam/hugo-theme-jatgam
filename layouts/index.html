@@ -1,4 +1,5 @@
 {{ define "main" }}
+  {{ partial "notices.html" . }}
 
   {{ with .Site.Params.Widgets.HomepageBanner }}
     {{ if default false .enable }}
@@ -7,7 +8,6 @@
   {{ end }}
   {{ partial "carousel.html" . }}
 
-  {{ partial "notices.html" . }}
   {{ partial "mission.html" . }}
 
   {{ if isset .Site.Params.Widgets "customhomepagesection" }}

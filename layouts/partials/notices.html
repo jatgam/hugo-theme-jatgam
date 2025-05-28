@@ -1,5 +1,25 @@
 {{ if isset .Site.Params.Widgets "notices" }}
 {{ if default false .Site.Params.Widgets.Notices.enable }}
+{{ if isset .Site.Params.Widgets.Notices "list" }}
+{{ if gt (len .Site.Params.Widgets.Notices.list) 0 }}
+{{- range .Site.Params.Widgets.Notices.list -}}
+{{ $showNotice := true }}
+{{ if isset . "expireAt" }}
+{{- if (time .expireAt).Before now -}}
+{{ $showNotice = false }}
+{{- end -}}
+{{- end -}}
+{{- if $showNotice -}}
+<div class="notification is-primary is-light" id="jatgam__notices">
+    <button class="delete is-primary"></button>
+    {{ with .url }}<a href="{{.}}" target="_blank">{{ end }}
+    {{ .text | safeHTML }}
+    {{ with .url }}</a>{{ end }}
+</div>
+{{- end -}}
 
+{{- end -}}
+{{ end }}
+{{ end }}
 {{ end }}
 {{ end }}
