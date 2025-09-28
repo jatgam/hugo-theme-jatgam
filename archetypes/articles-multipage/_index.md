@@ -1,6 +1,6 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
-layout: list.multipage
+layout: multipagelist
 cascade:
     date: {{ .Date }}
     isMultipage: true
