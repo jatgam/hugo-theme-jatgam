@@ -1,0 +1,28 @@
+{{/*
+    Expects a string of a valid social icon:
+        flickr, youtube, facebook, twitter, github, linkedin, website
+*/}}
+
+{{ if not (eq (printf "%T" .) "string") }}
+    {{ errorf (printf `socialIcon: expected a string input %s` .) }}
+{{ end }}
+
+{{ $icon := . | default "website" }}
+
+<span class="icon is-medium">
+{{- if eq $icon "flickr" -}}
+<i class='ri-flickr-fill ri-2x' style='color: transparent;background: linear-gradient(to right, #0063dc 50%, #fb0081 50% 100%);background-clip: text;-webkit-background-clip: text;'></i>
+{{- else if eq $icon "youtube" -}}
+<i class='ri-youtube-fill ri-2x' style='color: #ff0000;'></i>
+{{- else if eq $icon "facebook" -}}
+<i class='ri-facebook-fill ri-2x' style='color: #1877f2;'></i>
+{{- else if eq $icon "twitter" -}}
+<i class='ri-twitter-fill ri-2x' style='color: #55acee;'></i>
+{{- else if eq $icon "github" -}}
+<i class='ri-github-fill ri-2x' style='color: #000000;'></i>
+{{- else if eq $icon "linkedin" -}}
+<i class='ri-linkedin-fill ri-2x' style='color: #0a66c2;'></i>
+{{- else -}}
+<i class='ri-global-fill ri-2x' style='color: #1877f2;'></i>
+{{- end -}}
+</span>

@@ -1,0 +1,5 @@
+{{ $class := .Attributes.class | default ""    }}
+{{ .Page.Store.Set "hasMathjax" true }}
+<div class="jatgam__math_block {{ $class }}">
+  $$${{.Inner}}$$$
+</div>

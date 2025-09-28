@@ -1,0 +1,50 @@
+{{ $imgSrc := .Get "src" }}
+{{ $isExternal := (.Get "isExternal") | default false }}
+{{ $image := false}}
+{{ if $isExternal }}
+    {{ $image = $imgSrc }}
+{{ else }}
+    {{ $image = $.Page.Resources.GetMatch $imgSrc }}
+    {{ with $image }}
+    {{ else }}
+        {{ $image = $.Page.Parent.Resources.GetMatch $imgSrc }}
+    {{ end }}
+    {{ with $image }}
+    {{ else }}
+        {{ $image = resources.GetMatch $imgSrc }}
+    {{ end }}
+{{ end }}
+
+{{ $caption := .Get "caption" | safeHTML }}
+{{ $alt := .Get "alt" }}
+{{ $link := .Get "link" }}
+
+{{ $width := (.Get "width") | default false }}
+{{ $maxWidth := (.Get "maxWidth") | default false }}
+
+{{ $isPulledRight := (.Get "pullRight") | default false }}
+{{ $isPulledLeft :=  (.Get "pullLeft") | default false }}
+
+{{ $classes := slice }}
+
+{{ if $isPulledRight }}
+    {{ $classes = $classes | append "is-pulled-right" }}
+{{ end }}
+{{ if $isPulledLeft }}
+    {{ $classes = $classes | append "is-pulled-left" }}
+{{ end }}
+
+{{ with $image }}
+{{ with $caption }}
+<figure style="{{with $width}}width:{{ . }};{{end}}{{with $maxWidth}}max-width:{{ . }};{{end}}" class="boxImage {{ delimit $classes " " }}">
+    {{ with $link }}<a href="{{$link}}" target="_blank">{{ end }}
+    <img src="{{ if $isExternal }}{{ $image }}{{ else }}{{ $image.RelPermalink }}{{ end }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+    {{ with $link }}</a>{{ end }}
+    <figcaption>{{ $caption }}</figcaption>
+</figure>
+{{ else }}
+{{ with $link }}<a href="{{$link}}" target="_blank">{{ end }}
+<img style="{{with $width}}width:{{ . }};{{end}}{{with $maxWidth}}max-width:{{ . }};{{end}}" src="{{ $image.RelPermalink }}" class="boxImage {{ delimit $classes " " }}"{{ with $alt }} alt="{{ . }}"{{ end }}>
+{{ with $link }}</a>{{ end }}
+{{ end }}
+{{ end }}
