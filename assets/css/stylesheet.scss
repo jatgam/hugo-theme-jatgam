@@ -11,8 +11,8 @@ $secondary: {{ .Site.Params.secondaryColor | default "#f14668" }};
 // $beige-lighter: #eff0eb;
 
 // Path to Bulma's sass folder
-@use "bulma/sass/utilities/mixins";
-@use "bulma/sass/utilities/derived-variables";
+//@use "bulma/sass/utilities/mixins";
+// @use "bulma/sass/utilities/derived-variables";
 @use "bulma/sass" with (
     $primary: $primary,
     $custom-colors: (
@@ -24,7 +24,7 @@ $secondary: {{ .Site.Params.secondaryColor | default "#f14668" }};
     $navbar-item-img-max-height: 5rem,
     $link: #485fc7,
 );
-
+@use "bulma/sass/utilities/mixins" as mixins;
 
 // import Bulma Sticky Tables
 @import "./bulma-sticky-table-2.0.1/_sticky-table.scss";

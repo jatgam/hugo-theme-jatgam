@@ -9,8 +9,8 @@
 
 <!-- Theme CSS -->
 {{ $opts := dict "transpiler" "dartsass" "targetPath" "css/style.css" }}
-{{ $style := resources.Get "/css/stylesheet.scss" | resources.ExecuteAsTemplate "css/style.main.scss" . | toCSS $opts | minify | fingerprint }}
-<link rel="stylesheet" href="{{ $style.RelPermalink | relURL }}" integrity="{{ $style.Data.Integrity }}" />
+{{ $style := resources.Get "/css/stylesheet.scss" | resources.ExecuteAsTemplate "css/style.main.scss" . | toCSS $opts | postCSS | minify | fingerprint | resources.PostProcess }}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}" crossorigin="anonymous" />
 
 <!-- Splide Carousel -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.7/dist/css/themes/splide-skyblue.min.css" integrity="sha256-5MhwlD+4YplC+gmZr/n/uW6gr5a691TDV5M3Oza/8d8=" crossorigin="anonymous">
