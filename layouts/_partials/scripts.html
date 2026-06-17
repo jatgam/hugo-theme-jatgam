@@ -35,3 +35,8 @@
   };
 </script>
 {{ end }}
+
+{{ if or (.Page.Store.Get "needsCalendarAssets") (eq .Layout "calendar") .Params.hasCalendar }}
+<!-- calendar widget (Store flag set by _partials/calendar.html; declarative fallbacks for the calendar page + flying-site embeds) -->
+{{ partial "calendarAssetsScripts.html" . }}
+{{ end }}

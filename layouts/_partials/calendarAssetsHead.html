@@ -1,0 +1,23 @@
+{{- /*
+    <head> assets for the calendar widget (_partials/calendar.html).
+    Gated in head.html on `eq .Layout "calendar"` OR `.Params.hasCalendar` (head renders before main,
+    so it cannot rely on the Page.Store flag the widget sets — gate declaratively instead).
+*/ -}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
+<style>
+    @media (max-width: 767.98px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+        display: block;
+        text-align: center;
+    }
+
+    .fc-header-toolbar .fc-toolbar-chunk {
+        display: block;
+    }
+}
+    .calendar-legend { display: flex; flex-wrap: wrap; align-items: center; }
+    .calendar-legend-item { display: inline-flex; align-items: center; margin-bottom: 0.25rem; }
+    .calendar-legend .checkbox { display: inline-flex; align-items: center; }
+    .calendar-swatch { display: inline-block; width: 0.85em; height: 0.85em; border-radius: 3px; margin: 0 0.4em; border: 1px solid rgba(0,0,0,0.2); }
+    .calendar-subscribe-link { cursor: pointer; }
+</style>

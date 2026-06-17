@@ -1,0 +1,28 @@
+{{- /*
+    Renders a FullCalendar-compatible JSON event array for a set of event-like pages.
+    Param (dict):
+      pages  (required) an already-filtered page collection (e.g. `where .RegularPagesRecursive "Type" "reservations"`).
+      link   (optional, default true) emit an event "url" linking to each page. Set false for feeds whose
+             pages are not rendered (e.g. field reservations) so calendar entries are not clickable.
+    Each page is expected to carry the event front matter: Date, EndDateTime, allday, Location, Cancelled.
+    Used by events/list.json and by consumer feeds so every feed shares one shape.
+*/ -}}
+{{- $pages := .pages -}}
+{{- $link := true -}}
+{{- if isset . "link" }}{{ $link = .link }}{{ end -}}
+[
+    {{ range $index, $e := $pages }}
+    {{ if $index }}, {{ end }}
+    {
+        "title": "{{ with .Params.Cancelled }}CANCELLED - {{ end }}{{ .Title }}{{ with .Params.Location }} @ {{.}}{{ end }}",
+        "start": "{{ (time .Date).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
+        "end": "{{ (time .Params.EndDateTime).UTC.Format "2006-01-02T15:04:05Z07:00" }}",
+        "allDay": {{ .Params.allday }},
+        {{ if $link }}"url": "{{ .Permalink | absURL }}",
+        {{ end }}"extendedProps": {
+            "location": "{{ .Params.Location }}",
+            "description": "{{ replace (.Summary | plainify) "\n" "\\n" }}"
+        }
+    }
+    {{ end }}
+]

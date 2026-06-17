@@ -22,6 +22,11 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
 {{- end -}}
 
+<!-- calendar widget (head runs before main, so gate declaratively, not on the Page.Store flag) -->
+{{- if or (eq .Layout "calendar") .Params.hasCalendar -}}
+{{ partial "calendarAssetsHead.html" . }}
+{{- end -}}
+
 <!-- Icons -->
 {{- with resources.Get "img/icons/apple-touch-icon.png" -}}
 <link rel="apple-touch-icon" sizes="180x180" href="{{ .RelPermalink }}">

@@ -1,19 +1,3 @@
-{{ define "extrahead" }}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" integrity="sha256-5veQuRbWaECuYxwap/IOE/DAwNxgm4ikX7nrgsqYp88=" crossorigin="anonymous">
-<style>
-    @media (max-width: 767.98px) {
-    .fc .fc-toolbar.fc-header-toolbar {
-        display: block;
-        text-align: center;
-    }
-
-    .fc-header-toolbar .fc-toolbar-chunk {
-        display: block;
-    }
-}
-</style>
-{{ end }}
-
 {{ define "main" }}
 {{ partial "cover.html" . }}
 <section class="section">
@@ -22,81 +6,55 @@
         {{ . }}
     </div>
     {{ end }}
-    <div class="container"><div id='calendar'></div></div>
+
+    {{- /* Base club-events source (backward-compatible: this is the only source unless a site
+           configures additional feeds via [[params.events.calendars]]). */ -}}
+    {{- $sources := slice (dict
+        "id" "events"
+        "name" (default "Events" .Site.Params.Events.calendarName)
+        "url" (printf "%sevents/index.json" .Site.BaseURL)
+        "color" (default .Site.Params.primaryColor .Site.Params.Events.color)
+        "subscribe" (printf "%sevents/index.ics" .Site.BaseURL)
+        "default" true) -}}
+
+    {{- /* Optional additional calendar feeds.
+           If a feed maps to a content section (url = "<section>/index.json"), the source is shown
+           only when that section currently has entries — so a configured-but-empty calendar
+           auto-hides instead of showing a dead checkbox. Feeds that don't resolve to a section
+           (e.g. external URLs) are always shown. */ -}}
+    {{- with .Site.Params.Events.calendars -}}
+    {{- range . -}}
+        {{- $cal := . -}}
+        {{- $show := true -}}
+        {{- $name := $cal.name -}}
+        {{- $color := $cal.color -}}
+        {{- $secPath := .url | strings.TrimSuffix "index.json" | strings.TrimSuffix "/" -}}
+        {{- with site.GetPage $secPath -}}
+            {{- $show = gt (len .RegularPagesRecursive) 0 -}}
+            {{- /* Section's own title/color win, so a feed's presentation lives in one place
+                   (its section _index.md). Config name/color stay as fallbacks for non-section feeds. */ -}}
+            {{- with .Title }}{{ $name = . }}{{ end -}}
+            {{- with .Params.color }}{{ $color = . }}{{ end -}}
+        {{- end -}}
+        {{- if $show -}}
+        {{- $sources = $sources | append (dict
+            "id" $cal.id
+            "name" $name
+            "url" $cal.url
+            "color" $color
+            "subscribe" (default "" $cal.subscribe)
+            "default" (default false $cal.default)) -}}
+        {{- end -}}
+    {{- end -}}
+    {{- end -}}
+
+    <div class="container">
+        {{ partial "calendar.html" (dict
+            "page" .
+            "id" "calendar"
+            "sources" $sources
+            "initialView" "listYear"
+            "showToggles" (gt (len $sources) 1)) }}
+    </div>
 </section>
-{{ end }}
-
-{{ define "extrascripts" }}
-<script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js" integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js" integrity="sha256-7PzqE1MyWa/IV5vZumk1CVO6OQbaJE4ns7vmxuUP/7g=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.11.3/main.global.min.js" integrity="sha256-Y7WDI9UHToDgc46Sw1kOFkQSnKhwLjp3NnpfcJ0NMRE=" crossorigin="anonymous"></script>
-
-<script src="https://unpkg.com/@popperjs/core@2.11.8" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/tippy.js@6.3.7" integrity="sha384-AiTRpehQ7zqeua0Ypfa6Q4ki/ddhczZxrKtiQbTQUlJIhBkTeyoZP9/W/5ulFt29" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2.2.5/dist/atcb.js" integrity="sha256-6yWNI6TMEEhoxmwUvHkwXNts2Xnh/aOR1tOCOdqhH7M=" crossorigin="anonymous" async defer></script>
-
-<script>
-    const subscribeConfig = {
-        name: {{ (default "Jatgam Theme Calendar" .Site.Params.Events.calendarName) }},
-        subscribe: true,
-        startDate: "2023-04-08",
-        icsFile: {{ .Site.BaseURL }}+"events/index.ics",
-        options: ["Apple", "Google", "iCal", "Outlook.com", "Microsoft365", "MicrosoftTeams", "Yahoo"],
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            events: '{{ .Site.BaseURL }}events/index.json',
-            initialView: "listYear",
-            customButtons: {
-                subscribeToCalendar: {
-                    text: 'Subscribe',
-                    click: function(e) {
-                        atcb_action(subscribeConfig, e.target);
-                    }
-                }
-            },
-            headerToolbar: {
-                left: "prev,next today subscribeToCalendar",
-                center: "title",
-                right: "listYear dayGridMonth,timeGridWeek,timeGridDay",
-            },
-            eventDidMount: function(info) {
-                // var tooltip = new Tooltip(info.el, {
-                //     title: info.event.extendedProps.description,
-                //     placement: 'top',
-                //     trigger: 'hover',
-                //     container: 'body'
-                // });
-                if (!info.view.type.startsWith("list")) {
-                    let content = `
-<div class="content has-text-centered">
-    <h6 class="is-6 title has-text-weight-light">${info.event.title}</h6>
-</div>`;
-                    tippy(info.el, {
-                        content: content,
-                        allowHTML: true,
-                        theme: "jatgam",
-                        followCursor: 'horizontal',
-                    });
-                }
-                
-            },
-            // eventContent: function(arg) {
-            //     let span = document.createElement('span')
-
-            //     if (arg.event.extendedProps.location) {
-            //         span.innerHTML = '<a href="' + arg.event.url + '">' + arg.event.title + '</a> @ ' +  arg.event.extendedProps.location;
-            //     } else {
-            //         span.innerHTML = '<a href="' + arg.event.url + '">' + arg.event.title + '</a>';
-            //     }
-
-            //     let arrayOfDomNodes = [ span ]
-            //     return { domNodes: arrayOfDomNodes }
-            // }
-        });
-        calendar.render();
-    });
-</script>
 {{ end }}

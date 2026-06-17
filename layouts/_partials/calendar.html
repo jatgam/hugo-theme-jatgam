@@ -1,0 +1,163 @@
+{{- /*
+    Reusable multi-source FullCalendar widget.
+
+    Params (dict):
+      page         (required) the Page rendering this widget — used to flag that calendar assets are needed.
+      id           DOM id of the calendar container (default "calendar"). Must be unique per page.
+      sources      slice of source dicts, each:
+                     id        (required, unique) FullCalendar event-source id; also used for toggle wiring.
+                     name      (required) label shown in the legend / subscribe button.
+                     url       (required) feed URL (FullCalendar JSON). Run through absURL.
+                     color     (optional) hex color for this source's events.
+                     textColor (optional) hex text color for this source's events.
+                     subscribe (optional) ICS URL; renders a subscribe action for this source.
+                     default   (optional, default true) whether the source starts visible / checked.
+      initialView  FullCalendar initial view (default "listYear").
+      showToggles  render a legend of checkboxes that toggle each source on/off (default false).
+
+    Asset loading is handled by calendarAssets.head.html (gated in head.html) and
+    calendarAssets.scripts.html (gated in scripts.html on the Store flag set just below).
+*/ -}}
+{{- $page := .page -}}
+{{- $id := .id | default "calendar" -}}
+{{- $initialView := .initialView | default "listYear" -}}
+{{- $showToggles := .showToggles | default false -}}
+
+{{- /* Signal the asset partials (read at end of body via Page.Store) that this page hosts a calendar. */ -}}
+{{- $page.Store.Set "needsCalendarAssets" true -}}
+
+{{- /* Normalize sources once; legend + JS both consume this. */ -}}
+{{- $jsSources := slice -}}
+{{- range .sources -}}
+  {{- $sub := .subscribe | default "" -}}
+  {{- if ne $sub "" }}{{ $sub = absURL $sub }}{{ end -}}
+  {{- $def := true -}}
+  {{- if isset . "default" }}{{ $def = .default }}{{ end -}}
+  {{- $jsSources = $jsSources | append (dict
+        "id" .id
+        "name" .name
+        "url" (absURL .url)
+        "color" (.color | default "")
+        "textColor" (.textColor | default "")
+        "subscribe" $sub
+        "default" $def) -}}
+{{- end -}}
+
+{{- if $showToggles }}
+<div id="{{ $id }}-legend" class="calendar-legend mb-4">
+  {{- range $jsSources }}
+  <span class="calendar-legend-item mr-4">
+    <label class="checkbox">
+      <input type="checkbox" class="calendar-toggle" data-source-id="{{ .id }}"{{ if .default }} checked{{ end }}>
+      <span class="calendar-swatch" style="background: {{ .color | default "#3788d8" }};"></span>
+      {{ .name }}
+    </label>
+    {{- if .subscribe }} <a id="subscribe-btn-{{ .id }}" class="calendar-subscribe-link is-size-7">(subscribe)</a>{{ end }}
+  </span>
+  {{- end }}
+</div>
+{{- end }}
+
+<div id="{{ $id }}"></div>
+
+<script>
+(function () {
+  var calId = {{ $id | jsonify | safeJS }};
+  var sourceDefs = {{ $jsSources | jsonify | safeJS }};
+  var showToggles = {{ if $showToggles }}true{{ else }}false{{ end }};
+  var initialView = {{ $initialView | jsonify | safeJS }};
+
+  function buildSource(s) {
+    var src = { id: s.id, url: s.url };
+    if (s.color) { src.color = s.color; }
+    if (s.textColor) { src.textColor = s.textColor; }
+    return src;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById(calId);
+    if (!el || typeof FullCalendar === 'undefined') { return; }
+
+    var subscribeConfigs = {};
+    sourceDefs.forEach(function (s) {
+      if (s.subscribe) {
+        subscribeConfigs[s.id] = {
+          name: s.name,
+          subscribe: true,
+          startDate: "2023-04-08",
+          icsFile: s.subscribe,
+          options: ["Apple", "Google", "iCal", "Outlook.com", "Microsoft365", "MicrosoftTeams", "Yahoo"],
+        };
+      }
+    });
+
+    var customButtons = {};
+    var leftButtons = "prev,next today";
+
+    // Single-calendar (no legend): expose a Subscribe button in the toolbar for the first subscribable source.
+    if (!showToggles) {
+      var subSrc = sourceDefs.find(function (s) { return s.subscribe; });
+      if (subSrc) {
+        customButtons.subscribeToCalendar = {
+          text: 'Subscribe',
+          click: function (e) { atcb_action(subscribeConfigs[subSrc.id], e.target); }
+        };
+        leftButtons += " subscribeToCalendar";
+      }
+    }
+
+    var calendar = new FullCalendar.Calendar(el, {
+      initialView: initialView,
+      eventSources: sourceDefs.filter(function (s) { return s.default; }).map(buildSource),
+      customButtons: customButtons,
+      headerToolbar: {
+        left: leftButtons,
+        center: "title",
+        right: "listYear dayGridMonth,timeGridWeek,timeGridDay",
+      },
+      displayEventEnd: true, // show the end time (not just start) in month/grid views so duration is clear
+      eventDidMount: function (info) {
+        if (!info.view.type.startsWith("list")) {
+          var timeStr = '';
+          if (!info.event.allDay && info.event.start) {
+            var timeFmt = { hour: 'numeric', minute: '2-digit' };
+            timeStr = info.event.start.toLocaleTimeString([], timeFmt);
+            if (info.event.end) { timeStr += ' – ' + info.event.end.toLocaleTimeString([], timeFmt); }
+          }
+          var content = '<div class="content has-text-centered">'
+            + '<h6 class="is-6 title has-text-weight-light mb-1">' + info.event.title + '</h6>'
+            + (timeStr ? '<p class="is-size-7 mb-0">' + timeStr + '</p>' : '')
+            + '</div>';
+          tippy(info.el, { content: content, allowHTML: true, theme: "jatgam", followCursor: 'horizontal' });
+        }
+      },
+    });
+    calendar.render();
+
+    if (showToggles) {
+      // Per-source subscribe links in the legend.
+      sourceDefs.forEach(function (s) {
+        if (!s.subscribe) { return; }
+        var btn = document.getElementById('subscribe-btn-' + s.id);
+        if (btn) { btn.addEventListener('click', function () { atcb_action(subscribeConfigs[s.id], btn); }); }
+      });
+      // Toggle event sources on/off from the legend checkboxes.
+      var legend = document.getElementById(calId + '-legend');
+      if (legend) {
+        legend.querySelectorAll('.calendar-toggle').forEach(function (cb) {
+          cb.addEventListener('change', function () {
+            var def = sourceDefs.find(function (s) { return s.id === cb.getAttribute('data-source-id'); });
+            if (!def) { return; }
+            var existing = calendar.getEventSourceById(def.id);
+            if (cb.checked && !existing) {
+              calendar.addEventSource(buildSource(def));
+            } else if (!cb.checked && existing) {
+              existing.remove();
+            }
+          });
+        });
+      }
+    }
+  });
+})();
+</script>
