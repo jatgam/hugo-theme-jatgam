@@ -115,6 +115,56 @@
     {{ end -}}
     {{ end -}}
 
+    {{- /* Company / contact + copyright footer.
+           - The company/contact + footer-menu columns render when params.contact or a
+             "footer" menu is set.
+           - The copyright/credit line uses an understated, configurable style when a
+             [params.footer] block is present (matching the company block's type scale);
+             otherwise it falls back to the original centered layout, so sites that don't
+             opt in are unaffected. */ -}}
+    {{- $contact := .Site.Params.contact -}}
+    {{- $footerMenu := .Site.Menus.footer -}}
+    {{- $footerCfg := .Site.Params.footer -}}
+
+    {{- if or $contact $footerMenu -}}
+    <section class="section {{ if $footerCfg }}pb-0{{ end }}">
+        <div class="container">
+            <div class="columns is-centered is-variable is-8">
+                {{- with $contact -}}
+                <div class="column is-narrow">
+                    <p class="title is-6 is-uppercase is-family-title mb-3">{{ $.Site.Params.orgName | default $.Site.Title }}</p>
+                    {{- with .addressLines }}<p class="is-size-7 has-text-grey mb-2">{{ delimit . "<br>" | safeHTML }}</p>{{ end -}}
+                    {{- with .email }}<p class="is-size-7"><span class="icon-text"><span class="icon"><i class="ri-mail-line"></i></span><span><a href="mailto:{{ . }}">{{ . }}</a></span></span></p>{{ end -}}
+                    {{- with .phoneDisplay }}<p class="is-size-7"><span class="icon-text"><span class="icon"><i class="ri-phone-line"></i></span><span><a href="tel:{{ $contact.phoneHref | default . }}">{{ . }}</a></span></span></p>{{ end -}}
+                </div>
+                {{- end -}}
+                {{- with $footerMenu -}}
+                <div class="column is-narrow">
+                    <p class="title is-6 is-uppercase is-family-title mb-3">{{ $.Site.Params.footerMenuTitle | default "Company" }}</p>
+                    <ul>
+                    {{- range .ByWeight }}<li class="mb-1"><a class="is-size-7" href="{{ .URL }}"{{ if .Params.external }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}</a></li>{{ end -}}
+                    </ul>
+                </div>
+                {{- end -}}
+            </div>
+        </div>
+    </section>
+    {{- end -}}
+
+    {{- if $footerCfg -}}
+    {{- /* Unified copyright/credit line — same type scale as the company block above. */ -}}
+    {{- $align := cond (eq (lower (default "center" $footerCfg.align)) "left") "has-text-left" "has-text-centered" -}}
+    <section class="section">
+        <div class="container">
+            <div class="is-size-7 has-text-grey {{ $align }}">
+                <p class="mb-1">{{ if $.Site.Copyright }}{{ $.Site.Copyright | safeHTML }}{{ else }}Copyright &copy; {{ now.Year }} {{ $.Site.Params.orgName | default $.Site.Title }}. All rights reserved.{{ end }}</p>
+                {{- if ne $footerCfg.poweredBy false }}
+                <p class="mb-0">Powered by <a href="https://gohugo.io">Hugo</a> and <a href="https://bulma.io/">Bulma</a> &middot; Theme by <a href="https://github.com/jatgam/hugo-theme-jatgam">Jatgam</a></p>
+                {{- end }}
+            </div>
+        </div>
+    </section>
+    {{- else -}}
     <section class="section">
         <div class="container">
             <div class="has-text-centered">
@@ -131,6 +181,7 @@
             </div>
         </div>
     </section>
+    {{- end -}}
 </footer>
 
 <!-- Extended footer section-->

@@ -88,6 +88,18 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "url": {{ .Site.BaseURL }},
+    {{ with .Site.Params.contact }}
+    {{ with .email }}"email": "{{ . }}",{{ end }}
+    {{ with .phoneHref }}"telephone": "{{ . }}",{{ end }}
+    {{ if or .streetAddress .addressRegion }}"address": {
+      "@type": "PostalAddress"{{ with .streetAddress }},
+      "streetAddress": "{{ . }}"{{ end }}{{ with .addressLocality }},
+      "addressLocality": "{{ . }}"{{ end }}{{ with .addressRegion }},
+      "addressRegion": "{{ . }}"{{ end }}{{ with .postalCode }},
+      "postalCode": "{{ . }}"{{ end }}{{ with .addressCountry }},
+      "addressCountry": "{{ . }}"{{ end }}
+    },{{ end }}
+    {{ end }}
     {{ with .Site.Params.sameAs }}"sameAs": [{{range $i, $link := .}}{{ if $i }}, {{ end }}{{$link}}{{end}}],{{ end }}
     {{with resources.Get .Site.Params.orgLogo}}"logo": {{ .Permalink }},{{end}}
     "name": "{{ .Site.Params.orgName }}",
